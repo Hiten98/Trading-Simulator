@@ -1,4 +1,4 @@
-	
+
 	var mysql = require('mysql');
 	var connection = mysql.createConnection({
 	  host     : 'tradingsim.cj7tvixlpjsb.us-east-2.rds.amazonaws.com',
@@ -7,8 +7,13 @@
 	  database : 'tradingsim'
 	});
 
-	connection.connect(function(err) {
-	  if (err) throw err;
-	  console.log("Connected!");
-	});
+
+    var functions = require('./functions.js');
+
+	// connection.connect(function(err) {
+	//   if (err) throw err;
+	//   console.log("Connected!");
+	// });
+
+    functions.register("a", "B")
 
