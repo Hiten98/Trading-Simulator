@@ -1,8 +1,10 @@
 
 	module.exports = {
 		connect,
+		use,
 		register,
 		login,
+		addValue,
 		test
 	}
 
@@ -21,21 +23,53 @@
 		});
 	}
 
-	function register(email, password) {
+	function use(sql, callback) {
 		connection.connect(function(err) {
 			if (err) throw err;
-			console.log("Connected!");
+			connection.query(sql, function(err, result) {
+				if(err) throw err;
+				callback(result);
+			});
+		});
+	}
+
+	function useNext(sql, callback) {
+		connection.query(sql, function(err, result) {
+			if(err) throw err;
+			callback(result);
+		});
+	}
+
+	function register(email, password) {
+		var sql = "SELECT * FROM Users WHERE email = \"" + email + "\"";
+		use(sql, (x) => {
+			if(x.length == 1) {
+				console.log("Register: Email already exists");
+				// callback(false);
+				return false;
+			}
+			else {
+				sql = "INSERT INTO Users(email, pass) VALUES(\"" + email + "\", \"" + password + "\")";
+				useNext(sql, (y) => {
+					console.log("Register: Success");
+					// callback(true);
+					return true;
+				});
+			}
 		});
 	}
 
 	function login(email, password) {
-		connection.connect(function(err) {
-			if (err) throw err;
-			var sql = "SELECT * FROM Users WHERE email = " + email;
-			connection.query(sql, function(err, result) {
-				if(err) throw err;
-				console.log(result);
-			});
+		var sql = "SELECT * FROM Users WHERE email = \"" + email + "\"";
+		use(sql, (x) => {
+			console.log(x[0].Email);
+		});
+	}
+
+	function addValue(currency, value) {
+		var sql = "INSERT INTO " + currency + " VALUES(" + value + ")";
+		use(sql, (x) => {
+			console.log(x);
 		});
 	}
 

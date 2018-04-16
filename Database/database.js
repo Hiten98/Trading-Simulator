@@ -1,6 +1,6 @@
 
 	var functions = require('./functions.js');
 
-    functions.connect();
-	// functions.test();
+    // functions.addValue();
+	functions.register("rathod@purdue.com", "something");
 
