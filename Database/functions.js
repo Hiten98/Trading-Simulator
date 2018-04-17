@@ -6,6 +6,8 @@
 		register,
 		login,
 		addValue,
+		graph,
+		getUser
 	}
 
 	var mysql = require('mysql');
@@ -91,7 +93,30 @@
 		});
 	}
 
-	
+	function graph(currency, callback) {
+		var sql = "SELECT value FROM " + currency.toUpperCase();
+		use(sql, (x) => {
+			console.log("Graph: Success");
+			callback(x);
+		});
+	}
+
+	function getUser(email, callback) {
+		var sql = "SELECT * FROM Users WHERE email = \"" + email + "\"";
+		use(sql, (x) => {
+			var size = Object.keys(x[0]).length;
+			Object.keys(x[0]).forEach(function(key) {
+				if(x[0].hasOwnProperty(key) && x[0][key] == 0)
+					delete x[0][key];
+			});
+			console.log("Get User: Success");
+			callback(x);
+		});
+	}
+
+	function trade(email, currency, value) {
+		
+	}
 
 	function test() {
 		connection.connect(function(err) {
