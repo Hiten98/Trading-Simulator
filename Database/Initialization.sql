@@ -46,7 +46,7 @@ SELECT * FROM EUR;
 DELETE FROM EUR WHERE NUMBER = (SELECT MIN(NUMBER) FROM EUR);
 DELETE FROM EUR ORDER BY number LIMIT 1;
 
-CREATE TABLE EUR (
+CREATE TABLE JPY (
     number NUMERIC PRIMARY KEY UNIQUE NOT NULL,
     total FLOAT(30,2) DEFAULT 300000000.00,
     funds FLOAT(30,2) DEFAULT 300000000.00,
@@ -54,6 +54,205 @@ CREATE TABLE EUR (
     diff FLOAT(10,2) NOT NULL,
     percent FLOAT(5,2) NOT NULL
 );
-INSERT INTO EUR(number, value, diff, percent) VALUES(1, 1, 0, 0);
-
+INSERT INTO JPY(number, value, diff, percent) VALUES(1, 1, 0, 0);
+CREATE TABLE GBP (
+    number NUMERIC PRIMARY KEY UNIQUE NOT NULL,
+    total FLOAT(30,2) DEFAULT 300000000.00,
+    funds FLOAT(30,2) DEFAULT 300000000.00,
+    value FLOAT(10,2) NOT NULL,
+    diff FLOAT(10,2) NOT NULL,
+    percent FLOAT(5,2) NOT NULL
+);
+INSERT INTO GBP(number, value, diff, percent) VALUES(1, 1, 0, 0);
+CREATE TABLE AUD (
+    number NUMERIC PRIMARY KEY UNIQUE NOT NULL,
+    total FLOAT(30,2) DEFAULT 300000000.00,
+    funds FLOAT(30,2) DEFAULT 300000000.00,
+    value FLOAT(10,2) NOT NULL,
+    diff FLOAT(10,2) NOT NULL,
+    percent FLOAT(5,2) NOT NULL
+);
+INSERT INTO AUD(number, value, diff, percent) VALUES(1, 1, 0, 0);
+CREATE TABLE CAD (
+    number NUMERIC PRIMARY KEY UNIQUE NOT NULL,
+    total FLOAT(30,2) DEFAULT 300000000.00,
+    funds FLOAT(30,2) DEFAULT 300000000.00,
+    value FLOAT(10,2) NOT NULL,
+    diff FLOAT(10,2) NOT NULL,
+    percent FLOAT(5,2) NOT NULL
+);
+INSERT INTO CAD(number, value, diff, percent) VALUES(1, 1, 0, 0);
+CREATE TABLE CHF (
+    number NUMERIC PRIMARY KEY UNIQUE NOT NULL,
+    total FLOAT(30,2) DEFAULT 300000000.00,
+    funds FLOAT(30,2) DEFAULT 300000000.00,
+    value FLOAT(10,2) NOT NULL,
+    diff FLOAT(10,2) NOT NULL,
+    percent FLOAT(5,2) NOT NULL
+);
+INSERT INTO CHF(number, value, diff, percent) VALUES(1, 1, 0, 0);
+CREATE TABLE CNY (
+    number NUMERIC PRIMARY KEY UNIQUE NOT NULL,
+    total FLOAT(30,2) DEFAULT 300000000.00,
+    funds FLOAT(30,2) DEFAULT 300000000.00,
+    value FLOAT(10,2) NOT NULL,
+    diff FLOAT(10,2) NOT NULL,
+    percent FLOAT(5,2) NOT NULL
+);
+INSERT INTO CNY(number, value, diff, percent) VALUES(1, 1, 0, 0);
+CREATE TABLE SEK(
+    number NUMERIC PRIMARY KEY UNIQUE NOT NULL,
+    total FLOAT(30,2) DEFAULT 300000000.00,
+    funds FLOAT(30,2) DEFAULT 300000000.00,
+    value FLOAT(10,2) NOT NULL,
+    diff FLOAT(10,2) NOT NULL,
+    percent FLOAT(5,2) NOT NULL
+);
+INSERT INTO SEK(number, value, diff, percent) VALUES(1, 1, 0, 0);
+CREATE TABLE MXN (
+    number NUMERIC PRIMARY KEY UNIQUE NOT NULL,
+    total FLOAT(30,2) DEFAULT 300000000.00,
+    funds FLOAT(30,2) DEFAULT 300000000.00,
+    value FLOAT(10,2) NOT NULL,
+    diff FLOAT(10,2) NOT NULL,
+    percent FLOAT(5,2) NOT NULL
+);
+INSERT INTO MXN(number, value, diff, percent) VALUES(1, 1, 0, 0);
+CREATE TABLE NZD (
+    number NUMERIC PRIMARY KEY UNIQUE NOT NULL,
+    total FLOAT(30,2) DEFAULT 300000000.00,
+    funds FLOAT(30,2) DEFAULT 300000000.00,
+    value FLOAT(10,2) NOT NULL,
+    diff FLOAT(10,2) NOT NULL,
+    percent FLOAT(5,2) NOT NULL
+);
+INSERT INTO NZD(number, value, diff, percent) VALUES(1, 1, 0, 0);
+CREATE TABLE SGD (
+    number NUMERIC PRIMARY KEY UNIQUE NOT NULL,
+    total FLOAT(30,2) DEFAULT 300000000.00,
+    funds FLOAT(30,2) DEFAULT 300000000.00,
+    value FLOAT(10,2) NOT NULL,
+    diff FLOAT(10,2) NOT NULL,
+    percent FLOAT(5,2) NOT NULL
+);
+INSERT INTO SGD(number, value, diff, percent) VALUES(1, 1, 0, 0);
+CREATE TABLE HKD (
+    number NUMERIC PRIMARY KEY UNIQUE NOT NULL,
+    total FLOAT(30,2) DEFAULT 300000000.00,
+    funds FLOAT(30,2) DEFAULT 300000000.00,
+    value FLOAT(10,2) NOT NULL,
+    diff FLOAT(10,2) NOT NULL,
+    percent FLOAT(5,2) NOT NULL
+);
+INSERT INTO HKD(number, value, diff, percent) VALUES(1, 1, 0, 0);
+CREATE TABLE NOK (
+    number NUMERIC PRIMARY KEY UNIQUE NOT NULL,
+    total FLOAT(30,2) DEFAULT 300000000.00,
+    funds FLOAT(30,2) DEFAULT 300000000.00,
+    value FLOAT(10,2) NOT NULL,
+    diff FLOAT(10,2) NOT NULL,
+    percent FLOAT(5,2) NOT NULL
+);
+INSERT INTO NOK(number, value, diff, percent) VALUES(1, 1, 0, 0);
+CREATE TABLE KRW (
+    number NUMERIC PRIMARY KEY UNIQUE NOT NULL,
+    total FLOAT(30,2) DEFAULT 300000000.00,
+    funds FLOAT(30,2) DEFAULT 300000000.00,
+    value FLOAT(10,2) NOT NULL,
+    diff FLOAT(10,2) NOT NULL,
+    percent FLOAT(5,2) NOT NULL
+);
+INSERT INTO KRW(number, value, diff, percent) VALUES(1, 1, 0, 0);
+CREATE TABLE TRY (
+    number NUMERIC PRIMARY KEY UNIQUE NOT NULL,
+    total FLOAT(30,2) DEFAULT 300000000.00,
+    funds FLOAT(30,2) DEFAULT 300000000.00,
+    value FLOAT(10,2) NOT NULL,
+    diff FLOAT(10,2) NOT NULL,
+    percent FLOAT(5,2) NOT NULL
+);
+INSERT INTO TRY(number, value, diff, percent) VALUES(1, 1, 0, 0);
+CREATE TABLE INR (
+    number NUMERIC PRIMARY KEY UNIQUE NOT NULL,
+    total FLOAT(30,2) DEFAULT 300000000.00,
+    funds FLOAT(30,2) DEFAULT 300000000.00,
+    value FLOAT(10,2) NOT NULL,
+    diff FLOAT(10,2) NOT NULL,
+    percent FLOAT(5,2) NOT NULL
+);
+INSERT INTO INR(number, value, diff, percent) VALUES(1, 1, 0, 0);
+CREATE TABLE RUB (
+    number NUMERIC PRIMARY KEY UNIQUE NOT NULL,
+    total FLOAT(30,2) DEFAULT 300000000.00,
+    funds FLOAT(30,2) DEFAULT 300000000.00,
+    value FLOAT(10,2) NOT NULL,
+    diff FLOAT(10,2) NOT NULL,
+    percent FLOAT(5,2) NOT NULL
+);
+INSERT INTO RUB(number, value, diff, percent) VALUES(1, 1, 0, 0);
+CREATE TABLE BRL (
+    number NUMERIC PRIMARY KEY UNIQUE NOT NULL,
+    total FLOAT(30,2) DEFAULT 300000000.00,
+    funds FLOAT(30,2) DEFAULT 300000000.00,
+    value FLOAT(10,2) NOT NULL,
+    diff FLOAT(10,2) NOT NULL,
+    percent FLOAT(5,2) NOT NULL
+);
+INSERT INTO BRL(number, value, diff, percent) VALUES(1, 1, 0, 0);
+CREATE TABLE ZAR (
+    number NUMERIC PRIMARY KEY UNIQUE NOT NULL,
+    total FLOAT(30,2) DEFAULT 300000000.00,
+    funds FLOAT(30,2) DEFAULT 300000000.00,
+    value FLOAT(10,2) NOT NULL,
+    diff FLOAT(10,2) NOT NULL,
+    percent FLOAT(5,2) NOT NULL
+);
+INSERT INTO ZAR(number, value, diff, percent) VALUES(1, 1, 0, 0);
+CREATE TABLE DKK (
+    number NUMERIC PRIMARY KEY UNIQUE NOT NULL,
+    total FLOAT(30,2) DEFAULT 300000000.00,
+    funds FLOAT(30,2) DEFAULT 300000000.00,
+    value FLOAT(10,2) NOT NULL,
+    diff FLOAT(10,2) NOT NULL,
+    percent FLOAT(5,2) NOT NULL
+);
+INSERT INTO DKK(number, value, diff, percent) VALUES(1, 1, 0, 0);
+CREATE TABLE PLN (
+    number NUMERIC PRIMARY KEY UNIQUE NOT NULL,
+    total FLOAT(30,2) DEFAULT 300000000.00,
+    funds FLOAT(30,2) DEFAULT 300000000.00,
+    value FLOAT(10,2) NOT NULL,
+    diff FLOAT(10,2) NOT NULL,
+    percent FLOAT(5,2) NOT NULL
+);
+INSERT INTO PLN(number, value, diff, percent) VALUES(1, 1, 0, 0);
+CREATE TABLE TWD (
+    number NUMERIC PRIMARY KEY UNIQUE NOT NULL,
+    total FLOAT(30,2) DEFAULT 300000000.00,
+    funds FLOAT(30,2) DEFAULT 300000000.00,
+    value FLOAT(10,2) NOT NULL,
+    diff FLOAT(10,2) NOT NULL,
+    percent FLOAT(5,2) NOT NULL
+);
+INSERT INTO TWD(number, value, diff, percent) VALUES(1, 1, 0, 0);
+CREATE TABLE THB (
+    number NUMERIC PRIMARY KEY UNIQUE NOT NULL,
+    total FLOAT(30,2) DEFAULT 300000000.00,
+    funds FLOAT(30,2) DEFAULT 300000000.00,
+    value FLOAT(10,2) NOT NULL,
+    diff FLOAT(10,2) NOT NULL,
+    percent FLOAT(5,2) NOT NULL
+);
+INSERT INTO THB(number, value, diff, percent) VALUES(1, 1, 0, 0);
+CREATE TABLE MYR (
+    number NUMERIC PRIMARY KEY UNIQUE NOT NULL,
+    total FLOAT(30,2) DEFAULT 300000000.00,
+    funds FLOAT(30,2) DEFAULT 300000000.00,
+    value FLOAT(10,2) NOT NULL,
+    diff FLOAT(10,2) NOT NULL,
+    percent FLOAT(5,2) NOT NULL
+);
+INSERT INTO MYR(number, value, diff, percent) VALUES(1, 1, 0, 0);
 DROP TABLE EUR;
+SELECT * FROM tradingsim;
+SHOW TABLES;
