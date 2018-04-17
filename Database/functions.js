@@ -1,11 +1,11 @@
 
 	module.exports = {
 		connect,
+		useOnce,
 		use,
 		register,
 		login,
 		addValue,
-		test
 	}
 
 	var mysql = require('mysql');
@@ -23,7 +23,7 @@
 		});
 	}
 
-	function use(sql, callback) {
+	function useOnce(sql, callback) {
 		connection.connect(function(err) {
 			if (err) throw err;
 			connection.query(sql, function(err, result) {
@@ -33,45 +33,65 @@
 		});
 	}
 
-	function useNext(sql, callback) {
+	function use(sql, callback) {
 		connection.query(sql, function(err, result) {
 			if(err) throw err;
+			// console.log(result);
 			callback(result);
 		});
 	}
 
-	function register(email, password) {
+	function register(email, password, callback) {
 		var sql = "SELECT * FROM Users WHERE email = \"" + email + "\"";
 		use(sql, (x) => {
 			if(x.length == 1) {
 				console.log("Register: Email already exists");
-				// callback(false);
-				return false;
+				callback("FAILURE");
 			}
 			else {
 				sql = "INSERT INTO Users(email, pass) VALUES(\"" + email + "\", \"" + password + "\")";
-				useNext(sql, (y) => {
+				use(sql, (y) => {
 					console.log("Register: Success");
-					// callback(true);
-					return true;
+					callback("SUCCESS");
 				});
 			}
 		});
 	}
 
-	function login(email, password) {
+	function login(email, password, callback) {
 		var sql = "SELECT * FROM Users WHERE email = \"" + email + "\"";
 		use(sql, (x) => {
-			console.log(x[0].Email);
+			if(x.length == 0) {
+				console.log("Login: No such user");
+				callback("INCORRECT-EMAIL");
+			}
+			else if(password == x[0].pass) {
+				console.log("Login: Success");
+				callback("SUCCESS");
+			}
+			else {
+				console.log("Login: Incorrect password");
+				callback("INCORRECT-PASSWORD");
+			}
 		});
 	}
 
 	function addValue(currency, value) {
-		var sql = "INSERT INTO " + currency + " VALUES(" + value + ")";
+		var sql = "SELECT * FROM " + currency.toUpperCase() + " WHERE NUMBER = (SELECT MAX(NUMBER) FROM " + currency.toUpperCase() + ")";
 		use(sql, (x) => {
-			console.log(x);
+			var number = x[0].number + 1;
+			var percent = (value / x[0].value) * 100 - 100;
+			var diff = value - x[0].value;
+			sql = "INSERT INTO " + currency.toUpperCase() + "(number, value, diff, percent) VALUES(" + number + ", " + value + ", " + diff + "," + percent + ")";
+			use(sql, (y) => { console.log("Add Value: Add uccess"); });
+			if(number > 200) {
+				sql = "DELETE FROM " + currency.toUpperCase() + " ORDER BY number LIMIT 1";
+				use(sql, (z) => { console.log("Add Value: Delete success"); });
+			}
 		});
 	}
+
+	
 
 	function test() {
 		connection.connect(function(err) {

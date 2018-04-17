@@ -1,6 +1,6 @@
 USE tradingsim;
 CREATE TABLE Users (
-    email VARCHAR(50) PRIMARY KEY NOT NULL,
+    email VARCHAR(50) PRIMARY KEY NOT NULL UNIQUE,
     pass VARCHAR(32) NOT NULL,
     usd FLOAT(20,2) DEFAULT 1000.00,
 	eur FLOAT(20,2) DEFAULT 0.00,
@@ -32,3 +32,20 @@ INSERT INTO Users(email, pass) VALUES("darwinfvaz@gmail.com", "something");
 INSERT INTO Users(email, pass) VALUES("hitenrathod98@gmail.com", "something");
 INSERT INTO Users(email, pass) VALUES("sinha33@purdue.edu", "something");
 SELECT * FROM Users;
+CREATE TABLE EUR (
+    number NUMERIC PRIMARY KEY UNIQUE NOT NULL,
+    total FLOAT(30,2) DEFAULT 300000000.00,
+    funds FLOAT(30,2) DEFAULT 300000000.00,
+    value FLOAT(10,2) NOT NULL,
+    diff FLOAT(10,2) NOT NULL,
+    percent FLOAT(5,2) NOT NULL
+);
+INSERT INTO EUR(number, value, diff, percent) VALUES(4, 0.8, 0, 0);
+SELECT * FROM EUR WHERE NUMBER = (SELECT MIN(NUMBER) FROM EUR);
+SELECT * FROM EUR;
+DELETE FROM EUR WHERE NUMBER = (SELECT MIN(NUMBER) FROM EUR);
+DELETE FROM EUR ORDER BY number LIMIT 1;
+
+
+
+DROP TABLE EUR;
