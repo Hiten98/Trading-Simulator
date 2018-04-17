@@ -7,7 +7,8 @@
 		login,
 		addValue,
 		graph,
-		getUser
+		getUser,
+		trade
 	}
 
 	var mysql = require('mysql');
@@ -115,7 +116,10 @@
 	}
 
 	function trade(email, currency, value) {
-		
+		var sql = "UPDATE Users SET " + currency.toLowerCase() + " = " + value + " WHERE email = \"" + email + "\"";
+		use(sql, (x) => {
+			console.log(x);
+		});
 	}
 
 	function test() {
