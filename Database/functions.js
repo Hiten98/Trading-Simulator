@@ -8,7 +8,8 @@
 		addValue,
 		graph,
 		getUser,
-		trade
+		trade,
+		latestValue,
 	}
 
 	var mysql = require('mysql');
@@ -119,6 +120,23 @@
 		var sql = "UPDATE Users SET " + currency.toLowerCase() + " = " + value + " WHERE email = \"" + email + "\"";
 		use(sql, (x) => {
 			console.log(x);
+		});
+	}
+
+	function latestValue(callback) {
+		var currency = ["eur", "jpy", "gbp", "aud", "cad", "chf", "cny", "sek", "mxn", "nzd", "sgd", "hkd", "nok", "krw", "try", "inr", "rub", "brl", "zar", "dkk", "pln", "twd", "thb", "myr"];
+		var result = {};
+		var i = 0;
+		currency.forEach(function(key) {
+			var sql = "SELECT * FROM " + key.toUpperCase() + " WHERE NUMBER = (SELECT MAX(NUMBER) FROM " + key.toUpperCase() + ")";
+			use(sql, (x) => {
+				result[key] = x[0];
+				i++;
+				if(i == 24) {
+					console.log("Values: Success");
+					callback(result);
+				}
+			});
 		});
 	}
 
