@@ -111,6 +111,8 @@
 				if(x[0].hasOwnProperty(key) && x[0][key] == 0)
 					delete x[0][key];
 			});
+			delete x[0]["email"];
+			delete x[0]["pass"];
 			console.log("Get User: Success");
 			callback(x);
 		});
