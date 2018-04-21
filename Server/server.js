@@ -257,6 +257,21 @@ app.post('/UPDATE-THINGS', function (req, res) {
 })
 
 //reset password
+app.post('/RESET-PASSWORD', function (req, res) {
+  console.log(req.body);
+  var email = req.body.email;
+  var password = req.body.password;
+  database.reset(email, password);
+  res.json({
+    'status': true,
+    'message': 'password updated successfully'
+  })
+})
+
+//get latest value
+app.post('/GET-LATEST-VALUE', function (req, res) {
+  res.send(currencies);
+})
 
 //sleep for
 function sleep(ms) {
