@@ -228,7 +228,6 @@ app.post('/VERIFY-TOKEN', function (req, res) {
       else {
         console.log(decoded);
         req.decoded = decoded;
-        var token = makeJWT(payload);
         res.json({
           'status': true,
           'message': 'Token verified'
@@ -273,6 +272,37 @@ app.post('/GET-LATEST-VALUE', function (req, res) {
   res.send(currencies);
 })
 
+//get currency values
+app.post('/GET-GRAPH-VALUES', function (req, res) {
+  console.log(req.body);
+  var currency = req.body.currency;
+  var token = req.body.token;
+  if (token) {
+    jwt.verify(token, app.get('secret'), function(err, decoded) {
+      if(err) {
+        res.json({
+          'status': false,
+          'message': 'token could not be verified'
+        })
+      }
+      else {
+        console.log(decoded);
+        req.decoded = decoded;
+        database.graph(currency, (x) => {
+          x["status"] = true
+          res.send(x);
+        })
+      }
+    })
+  }
+  else {
+    res.status(404).json({
+      'status': false,
+      'message': 'token not found'
+    })
+  }
+})
+
 //sleep for
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -287,7 +317,6 @@ async function update() {
     await sleep(1000*min);
   }
 }
-
 
 //main fn
 app.listen(port, function() {
