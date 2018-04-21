@@ -38,6 +38,9 @@ currencies = {};
 //set up a JSON of volatility
 volatility = {};
 
+//set up a json of last changes
+changes = {};
+
 function init() {
   currencies["USD"] = 1;
   currencies["EUR"] = 1.23;
@@ -64,6 +67,33 @@ function init() {
   currencies["TWD"] = 0.034;
   currencies["THB"] = 0.032;
   currencies["MYR"] = 0.26;
+
+
+  changes["USD"] = 0;
+  changes["EUR"] = 0;
+  changes["JPY"] = 0;
+  changes["GBP"] = 0;
+  changes["AUD"] = 0;
+  changes["CAD"] = 0;
+  changes["CHF"] = 0;
+  changes["CNY"] = 0;
+  changes["SEK"] = 0;
+  changes["MXN"] = 0;
+  changes["NZD"] = 0;
+  changes["SGD"] = 0;
+  changes["HKD"] = 0;
+  changes["NOK"] = 0;
+  changes["KRW"] = 0;
+  changes["TRY"] = 0;
+  changes["INR"] = 0;
+  changes["RUB"] = 0;
+  changes["BRL"] = 0;
+  changes["ZAR"] = 0;
+  changes["DKK"] = 0;
+  changes["PLN"] = 0;
+  changes["TWD"] = 0;
+  changes["THB"] = 0;
+  changes["MYR"] = 0;
 
 
   volatility["USD"] = 0;
@@ -162,20 +192,37 @@ app.post('/REGISTER', function (req, res) {
   console.log(req.body);
   var email = req.body.email;
   var password = req.body.password;
-  db.register(email, password, (x) => {
-    if(x == 'SUCCESS') {
-      res.json({
-        'status': true,
-        'message': 'Registered Successfully'
-      });
-    }
-    else {
-      res.json({
-        'status': false,
-        'message': 'email already exists'
-      })
-    }
-  })
+  var flag = true;
+  if(email == '') {
+    res.json({
+      'status': false,
+      'message': 'email field is empty'
+    })
+    flag = false;
+  }
+  if(password == '' && flag) {
+    res.json({
+      'status': false,
+      'message': 'password field is empty'
+    })
+    flag = false;
+  }
+  if(flag) {
+    db.register(email, password, (x) => {
+      if(x == 'SUCCESS') {
+        res.json({
+          'status': true,
+          'message': 'Registered Successfully'
+        });
+      }
+      else {
+        res.json({
+          'status': false,
+          'message': 'email already exists'
+        })
+      }
+    })
+  }
 });
 
 //refresh jwt:
@@ -269,7 +316,11 @@ app.post('/RESET-PASSWORD', function (req, res) {
 
 //get latest value
 app.post('/GET-LATEST-VALUE', function (req, res) {
-  res.send(currencies);
+  res.json({
+    "currencies": currencies,
+    "volatility": volatility,
+    "changes": changes
+  });
 })
 
 //get currency values
