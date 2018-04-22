@@ -8,7 +8,10 @@
 		addValue,
 		graph,
 		getUser,
-		trade
+		trade,
+		latestValue,
+		reset,
+		clear
 	}
 
 	var mysql = require('mysql');
@@ -97,6 +100,8 @@
 	function graph(currency, callback) {
 		var sql = "SELECT value FROM " + currency.toUpperCase();
 		use(sql, (x) => {
+			for(var i = 0; i < x.length; i++)
+            	x[i] = x[i].value
 			console.log("Graph: Success");
 			callback(x);
 		});
@@ -110,6 +115,8 @@
 				if(x[0].hasOwnProperty(key) && x[0][key] == 0)
 					delete x[0][key];
 			});
+			delete x[0]["email"];
+			delete x[0]["pass"];
 			console.log("Get User: Success");
 			callback(x);
 		});
@@ -119,6 +126,42 @@
 		var sql = "UPDATE Users SET " + currency.toLowerCase() + " = " + value + " WHERE email = \"" + email + "\"";
 		use(sql, (x) => {
 			console.log(x);
+		});
+	}
+
+	function latestValue(callback) {
+		var currency = ["eur", "jpy", "gbp", "aud", "cad", "chf", "cny", "sek", "mxn", "nzd", "sgd", "hkd", "nok", "krw", "try", "inr", "rub", "brl", "zar", "dkk", "pln", "twd", "thb", "myr"];
+		var result = {};
+		var i = 0;
+		currency.forEach(function(key) {
+			var sql = "SELECT * FROM " + key.toUpperCase() + " WHERE NUMBER = (SELECT MAX(NUMBER) FROM " + key.toUpperCase() + ")";
+			use(sql, (x) => {
+				result[key] = x[0];
+				i++;
+				if(i == 24) {
+					console.log("Values: Success");
+					callback(result);
+				}
+			});
+		});
+	}
+
+	function reset(email, newp) {
+		var sql = "UPDATE Users SET pass = \"" + newp + "\" WHERE email = \"" + email + "\"";
+		use(sql, (x) => {
+			console.log(x);
+			console.log("Reset: Success");
+		});
+	}
+
+	function clear() {
+		var currency = ["eur", "jpy", "gbp", "aud", "cad", "chf", "cny", "sek", "mxn", "nzd", "sgd", "hkd", "nok", "krw", "try", "inr", "rub", "brl", "zar", "dkk", "pln", "twd", "thb", "myr"];
+		currency.forEach(function(key) {
+			var sql = "DELETE FROM " + key.toUpperCase();;
+			use(sql, (x) => {
+				var sql2 = "INSERT INTO " + key.toUpperCase() + "(number, value, diff, percent) VALUES(1, 1, 0, 0)";
+				use(sql2, (x) => {});
+			});
 		});
 	}
 
