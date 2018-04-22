@@ -43,7 +43,7 @@ class Main extends Component {
 
   render() {
     return (
-      <div classNane="whole">
+      <div>
         <Navbar color="dark" dark expand="md">
           <NavbarBrand href="/" className="mr-auto">
             Algorithmic Trading Simulator

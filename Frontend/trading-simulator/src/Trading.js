@@ -25,18 +25,24 @@ import {
   InputGroup,
   InputGroupAddon
 } from "reactstrap";
+import history from "./history";
 import MyCard from "./MyCards";
 
 class Main extends Component {
   constructor(props) {
     super(props);
 
+    console.log(props.match.params.jwt);
+    if(props.match.params.jwt == null || props.match.params.jwt == "") {
+      history.push("/login");
+    }
+    this.child = React.createRef();
     this.toggleNavbar = this.toggleNavbar.bind(this);
     this.state = {
       collapsed: true,
+      jwt: props.match.params.jwt,
       numItems: 1,
-      currencyList: ["a", "b", "c"],
-      myCurrencyList: ["a"],
+      cardStates: [],
       transactionCards: []
     };
   }
@@ -61,18 +67,23 @@ class Main extends Component {
     }
   };
 
+  handleCardState = (index, singleState) => {
+    let oldStates = this.state.cardStates;
+    oldStates[index] = singleState;
+    this.setState({
+      cardStates: oldStates
+    })
+  }
 
   submitTransaction = () => {
-      for(let card in this.state.transactionCards) {
-          card.getInfo();
-      }
+    console.log(this.state.cardStates);
   }
 
   componentDidMount = () => {
     let cards = [];
     for (let i = 0; i < this.state.numItems; i++) {
       cards.push(
-        <MyCard />
+        <MyCard handleCardState={this.handleCardState} myKey={i}/>
       );
     }
     this.setState({transactionCards: cards})
@@ -80,7 +91,7 @@ class Main extends Component {
 
   render() {
     return (
-      <div className="whole">
+      <div>
         <Navbar color="dark" dark expand="md">
           <NavbarBrand href="/" className="mr-auto">
             Algorithmic Trading Simulator

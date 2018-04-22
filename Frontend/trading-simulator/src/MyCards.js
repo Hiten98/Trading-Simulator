@@ -29,50 +29,95 @@ import {
 class Main extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
-      currencyList: ["a", "b", "c"],
-      myCurrencyList: ["a"],
-      currA: "",
-      currB: "",
+      currencyList: [
+        "eur",
+        "jpy",
+        "gbp",
+        "aud",
+        "cad",
+        "chf",
+        "cny",
+        "sek",
+        "mxn",
+        "nzd",
+        "sgd",
+        "hkd",
+        "nok",
+        "krw",
+        "try",
+        "inr",
+        "rub",
+        "brl",
+        "zar",
+        "dkk",
+        "pln",
+        "twd",
+        "thb",
+        "myr"
+      ],
+      myCurrencyList: ["eur", "jpy", "gbp", "aud", "cad"],
+      currA: "eur",
+      currB: "eur",
       valAmt: 0.0
     };
   }
 
   onAmountChange = event => {
     if (event.target.value < 0) {
-      this.setState({
-        valAmt: 0
-      });
+      this.setState(
+        {
+          valAmt: 0
+        },
+        () => {
+          this.props.handleCardState(this.props.myKey, this.state);
+        }
+      );
     } else {
-      this.setState({
-        valAmt: event.target.value
-      });
+      this.setState(
+        {
+          valAmt: event.target.value,
+          valNewAmt: event.target.value * 2
+        },
+        () => {
+          this.props.handleCardState(this.props.myKey, this.state);
+        }
+      );
     }
   };
 
   handleInputA = event => {
     console.log(event);
-    this.setState({
-      currA: event
-    });
+    this.setState(
+      {
+        currA: event
+      },
+      () => {
+        this.props.handleCardState(this.props.myKey, this.state);
+      }
+    );
   };
 
   handleInputB = event => {
     console.log(event);
-    this.setState({
-      currB: event
-    });
+    this.setState(
+      {
+        currB: event
+      },
+      () => {
+        this.props.handleCardState(this.props.myKey, this.state);
+      }
+    );
   };
 
   getInfo = () => {
     let obj = {
-        currA: this.state.currA,
-        currB: this.state.currB,
-        amount: this.state.valAmt
-    }
+      currA: this.state.currA,
+      currB: this.state.currB,
+      amount: this.state.valAmt
+    };
     return obj;
-}
+  };
 
   render() {
     let currencies = [];
@@ -103,6 +148,7 @@ class Main extends Component {
                     type="select"
                     name="select"
                     id="buysell"
+                    value={this.state.currA}
                     onChange={e => this.handleInputA(e.target.value)}
                   >
                     {myCurrencies}
@@ -121,6 +167,7 @@ class Main extends Component {
                     type="select"
                     name="select"
                     id="currency"
+                    value={this.state.currB}
                     onChange={e => this.handleInputB(e.target.value)}
                   >
                     {currencies}
@@ -135,6 +182,21 @@ class Main extends Component {
                 step="0.01"
                 value={this.state.valAmt}
                 onChange={this.onAmountChange}
+              />
+              <FaArrowRight
+                  size={20}
+                  style={{
+                    marginTop: "1.5vmin",
+                    marginLeft: "2vmin",
+                    marginRight: "2vmin"
+                  }}
+                />
+              <Input
+                placeholder="Amount"
+                type="number"
+                step="0.01"
+                value={this.state.valNewAmt}
+                disabled={true}
               />
             </CardText>
           </Card>
