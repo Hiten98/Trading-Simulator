@@ -43,30 +43,30 @@ changes = {};
 
 function init() {
   currencies["USD"] = 1;
-  currencies["EUR"] = 1.23;
-  currencies["JPY"] = 0.0093;
-  currencies["GBP"] = 1.40;
-  currencies["AUD"] = 0.77;
-  currencies["CAD"] = 0.78;
-  currencies["CHF"] = 1.03;
-  currencies["CNY"] = 0.16;
-  currencies["SEK"] = 0.12;
-  currencies["MXN"] = 0.054;
-  currencies["NZD"] = 0.72;
-  currencies["SGD"] = 0.76;
-  currencies["HKD"] = 0.13;
-  currencies["NOK"] = 0.13;
-  currencies["KRW"] = 0.00094;
-  currencies["TRY"] = 0.25;
-  currencies["INR"] = 0.015;
-  currencies["RUB"] = 0.016;
-  currencies["BRL"] = 0.29;
-  currencies["ZAR"] = 0.083;
-  currencies["DKK"] = 0.16;
-  currencies["PLN"] =0.29 ;
-  currencies["TWD"] = 0.034;
-  currencies["THB"] = 0.032;
-  currencies["MYR"] = 0.26;
+  currencies["EUR"] = 0.81;
+  currencies["JPY"] = 107.66;
+  currencies["GBP"] = 0.71;
+  currencies["AUD"] = 1.30;
+  currencies["CAD"] = 1.28;
+  currencies["CHF"] = 0.97;
+  currencies["CNY"] = 6.30;
+  currencies["SEK"] = 8.45;
+  currencies["MXN"] = 18.53;
+  currencies["NZD"] = 1.39;
+  currencies["SGD"] = 1.32;
+  currencies["HKD"] = 7.84;
+  currencies["NOK"] = 7.84;
+  currencies["KRW"] = 1071.09;
+  currencies["TRY"] = 4.08;
+  currencies["INR"] = 66.21;
+  currencies["RUB"] = 61.39;
+  currencies["BRL"] = 3.41;
+  currencies["ZAR"] = 12.10;
+  currencies["DKK"] = 6.06;
+  currencies["PLN"] = 3.40;
+  currencies["TWD"] = 29.47;
+  currencies["THB"] = 31.36;
+  currencies["MYR"] = 3.90;
 
 
   changes["USD"] = 0;
@@ -307,7 +307,7 @@ app.post('/RESET-PASSWORD', function (req, res) {
   console.log(req.body);
   var email = req.body.email;
   var password = req.body.password;
-  database.reset(email, password);
+  db.reset(email, password);
   res.json({
     'status': true,
     'message': 'password updated successfully'
@@ -339,8 +339,8 @@ app.post('/GET-GRAPH-VALUES', function (req, res) {
       else {
         console.log(decoded);
         req.decoded = decoded;
-        database.graph(currency, (x) => {
-          x["status"] = true
+        db.graph(currency, (x) => {
+          // x["status"] = true
           res.send(x);
         })
       }
@@ -354,17 +354,160 @@ app.post('/GET-GRAPH-VALUES', function (req, res) {
   }
 })
 
+//get user
+app.post('/GET-USER', function (req, res) {
+  var token = req.body.token;
+  if (token) {
+    jwt.verify(token, app.get('secret'), function(err, decoded) {
+      if(err) {
+        res.json({
+          'status': false,
+          'message': 'token could not be verified'
+        })
+      }
+      else {
+        console.log(decoded);
+        req.decoded = decoded;
+        db.getUser(decoded.email, (x) => {
+          // x["status"] = true
+          x[0]["status"] = true;
+          res.send(x[0]);
+        })
+      }
+    })
+  }
+  else {
+    res.status(404).json({
+      'status': false,
+      'message': 'token not found'
+    })
+  }
+})
+
+// trade to see if it is valid
+function validTrade (email, currA, currB, amt, callback) {
+  currA = currA.toLowerCase();
+  currB = currB.toLowerCase();
+  db.getUser(email, (x) =>{
+    if(x[currA] === undefined) {
+      callback(false);
+    }
+    if (parseFloat(x[currA]) > amt) {
+      var amt1 =  parseFloat(x[currA]) - amt;
+      db.trade(email, currA, amt1);
+      var amt2 = amt*currencies[currA.toUpperCase()]/currencies[currB.toUpperCase()];
+      if (!(x[currB] === undefined)) {
+        amt2 = amt2 + parseFloat(x[currB]);
+      }
+      db.trade(email, currB, amt2);
+      callback(true);
+    }
+    else {
+      callback(false);
+    }
+  })
+}
+
+//trade things
+app.post('/TRADE', function (req, res) {
+  console.log(req.body);
+  var token = req.body.token;
+  let flag = false;
+  if (token) {
+    jwt.verify(token, app.get('secret'), function(err, decoded) {
+      if(err) {
+        res.json({
+          'status': false,
+          'message': 'token could not be verified'
+        })
+      }
+      else {
+        console.log(decoded);
+        // req.decoded = decoded;
+        var flag = true;
+        var email = decoded.email;
+        var trades = [];
+        var index = 0;
+        for (number in req.body) {
+          if(isNan(number)) {
+            continue;
+          }
+          trades[index] = req.body.number;
+          index++;
+        }
+        for (let i = 0, p = Promise.resolve(); i < trades.length; i++) {
+          p = p.then(_ => new Promise(resolve =>
+            setTimeout(function () {
+              var flag2 = validTrade(email, trades[i].currA, trades[i].currB, trades[i].amt, function (flag2) {
+                if(!flag2) {
+                  flag = false;
+                }
+              });
+          })
+        ));
+          if(!flag) {
+            res.json({
+              'status': false,
+              'error': 'trade could not be completed'
+            });
+            break;
+          }
+        }
+        if(flag) {
+          res.json({
+            'status': true,
+            'message': "trade completed successfully"
+          })
+        }
+      }
+    })
+  }
+  else {
+    res.json({
+      'status': false,
+      'message': 'token not found'
+    })
+  }
+})
+
 //sleep for
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+//get %change
+function change(currency) {
+  var mod = 0.5;
+  if (currencies[currency] > 5000) {
+    mod = 0.8;
+  }
+  if (currencies[currency] < 0.01) {
+    mod = 0.2;
+  }
+  var direction;
+  if (Math.random() > mod) {
+    direction = 1;
+  }
+  else {
+    direction = -1;
+  }
+
+  return Math.random() * currencies[currency] * volatility[currency] / 100;
 }
 
 //async fn to update all values
 async function update() {
   var i = 1;
   while (true) {
-    console.log(i);
-    i++;
+    for (var currency in currencies) {
+      if (currency == 'USD') {
+        continue;
+      }
+      var change2 = change(currency);
+      changes[currency] = change2/currencies[currency];
+      var finalAmt = change2 + currencies[currency];
+      db.addValue(currency, finalAmt);
+    }
     await sleep(1000*min);
   }
 }
@@ -377,10 +520,14 @@ app.listen(port, function() {
   db.connect();
   console.log('Successfully connected to sql database');
   console.log('initialising values:');
+  init()
   console.log('done init');
   console.log('start updating values');
   update();
   console.log('it should be updating now');
+  console.log('clearing the database to start anew');
+  db.clear();
+  console.log('database cleared');
 })
 
 //error handler
