@@ -283,7 +283,7 @@ app.post('/VERIFY-TOKEN', function (req, res) {
     })
   }
   else {
-    res.status(404).json({
+    res.json({
       'status': false,
       'message': 'token not found'
     })
@@ -356,7 +356,7 @@ app.post('/GET-USER', function (req, res) {
     })
   }
   else {
-    res.status(404).json({
+    res.json({
       'status': false,
       'message': 'token not found'
     })
@@ -368,13 +368,14 @@ function validTrade (email, currA, currB, amt, callback) {
   currA = currA.toLowerCase();
   currB = currB.toLowerCase();
   db.getUser(email, (x) =>{
+    x = x[0];
     if(x[currA] === undefined) {
       callback(false);
     }
     if (parseFloat(x[currA]) > amt) {
       var amt1 =  parseFloat(x[currA]) - amt;
       db.trade(email, currA, amt1);
-      var amt2 = amt*currencies[currA.toUpperCase()]/currencies[currB.toUpperCase()];
+      var amt2 = amt*currencies[currB.toUpperCase()]/currencies[currA.toUpperCase()];
       if (!(x[currB] === undefined)) {
         amt2 = amt2 + parseFloat(x[currB]);
       }
@@ -392,27 +393,30 @@ function validTradeOnly (email, currA, currB, amt, callback) {
   currA = currA.toLowerCase();
   currB = currB.toLowerCase();
   db.getUser(email, (x) =>{
+    x = x[0];
     if(x[currA] === undefined) {
-      callback(false);
+      callback([0,-1]);   //user does not have currA
     }
     if (parseFloat(x[currA]) > amt) {
       var amt1 =  parseFloat(x[currA]) - amt;
       // db.trade(email, currA, amt1);
-      var amt2 = amt*currencies[currA.toUpperCase()]/currencies[currB.toUpperCase()];
+      var amt2 = amt*currencies[currB.toUpperCase()]/currencies[currA.toUpperCase()];
       if (!(x[currB] === undefined)) {
-        amt2 = amt2 + parseFloat(x[currB]);
+        // amt2 = amt2 + parseFloat(x[currB]);
       }
       // db.trade(email, currB, amt2);
       callback([amt1, amt2]);
     }
     else {
-      callback(false);
+      callback([parseFloat(x[currA]), -1]);    //user does not have ENOUGH of currA;
     }
   })
 }
 
+//verify trade
 app.post('/VERIFY-TRADE', function (req, res) {
   var token = req.body.token;
+  var flag = false;
   if (token) {
     jwt.verify(token, app.get('secret'), function(err, decoded) {
       if(err) {
@@ -429,27 +433,28 @@ app.post('/VERIFY-TRADE', function (req, res) {
         var currB = req.body.currB;
         var amt = req.body.amt;
         validTradeOnly(email, currA, currB, amt, (x) => {
-          if (x == false) {
-            db.getUser(email, (x) => {
-              var message = "Trade not succeeded. You have: "
-              var a1 = x[currA];
-              if (a1) {
-                message = message + String(a1);
-              }
-              else {
-                message = message + "0";
-              }
-              message = message + ". You tried trading: " + String(amt);
-              res.json({
-                "status": false,
-                'message': message
-              });
-            })
+          if (x[1] == -1) {
+            var message = "Trade not succeeded. You have: " + String(x[0]);
+            message = message + ". You tried trading: " + String(amt);
+            console.log(message);
+            console.log(currA);
+            console.log(currB);
+            console.log('sending response with message: ' + message);
+            temp = {
+              "status": false,
+              'message': message
+            };
+            if(!flag){
+              res.send(temp);
+              flag = true;
+            }
           }
           else {
+            console.log('sending the message that trade succeeded');
             res.json({
               'status': true,
-              'message': 'Trade succeeded: You now have ' + String(x[0]) + " of " + currA + " and " + String(x[1]) + " of " + currB
+              'message': 'Trade succeeded: You now have ' + String(x[0]) + " of " + currA + " and " + String(x[1]) + " of " + currB,
+              'amt': String(x[1])
             })
           }
         });
@@ -457,7 +462,7 @@ app.post('/VERIFY-TRADE', function (req, res) {
     })
   }
   else {
-    res.status(404).json({
+    res.json({
       'status': false,
       'message': 'token not found'
     })
