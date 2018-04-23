@@ -28,7 +28,7 @@ import {
 import history from "./history";
 import MyCard from "./MyCards";
 
-class Main extends Component {
+class Trading extends Component {
   constructor(props) {
     super(props);
 
@@ -139,4 +139,4 @@ class Main extends Component {
   }
 }
 
-export default Main;
+export default Trading;
