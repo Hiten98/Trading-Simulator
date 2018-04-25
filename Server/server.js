@@ -363,38 +363,6 @@ app.post('/GET-USER', function (req, res) {
   }
 })
 
-//convert
-app.post('/CONVERT', function(req, res) {
-  var curr = req.body.currency;
-  var amount req.body.amount;
-  var token = req.body.token;
-  if (token) {
-    jwt.verify(token, app.get('secret'), function(err, decoded) {
-      if(err) {
-        res.json({
-          'status': false,
-          'message': 'token could not be verified'
-        })
-      }
-      else {
-        console.log(decoded);
-        req.decoded = decoded;
-        db.getUser(decoded.email, (x) => {
-          // x["status"] = true
-          x[0]["status"] = true;
-          res.send(x[0]);
-        })
-      }
-    })
-  }
-  else {
-    res.json({
-      'status': false,
-      'message': 'token not found'
-    })
-  }
-})
-
 // trade to see if it is valid
 function validTrade (email, currA, currB, amt, callback) {
   currA = currA.toLowerCase();
@@ -562,6 +530,20 @@ app.post('/TRADE', function (req, res) {
     })
   }
 })
+
+//convert
+app.post('/CONVERT', function (req, res) {
+  console.log(req.body);
+  var currA = req.body.currA;
+  var currB = req.body.currB;
+  var amt = req.body.amt;
+  var amt2 = amt*currencies[currB.toUpperCase()]/currencies[currA.toUpperCase()];
+  res.json({
+    'status': true,
+    'amt': amt
+  })
+})
+
 
 //sleep for
 function sleep(ms) {
