@@ -41,6 +41,9 @@ volatility = {};
 //set up a json of last changes
 changes = {};
 
+// set up a json of base probabilities.
+prob = {};
+
 function init() {
   currencies["USD"] = 1;
   currencies["EUR"] = 0.81;
@@ -121,6 +124,32 @@ function init() {
   volatility["TWD"] = 0.84;
   volatility["THB"] = 0.52;
   volatility["MYR"] = 0.90;
+
+  prob["USD"] = 0.5;
+  prob["EUR"] = 0.5;
+  prob["JPY"] = 0.5;
+  prob["GBP"] = 0.5;
+  prob["AUD"] = 0.5;
+  prob["CAD"] = 0.5;
+  prob["CHF"] = 0.5;
+  prob["CNY"] = 0.5;
+  prob["SEK"] = 0.5;
+  prob["MXN"] = 0.5;
+  prob["NZD"] = 0.5;
+  prob["SGD"] = 0.5;
+  prob["HKD"] = 0.5;
+  prob["NOK"] = 0.5;
+  prob["KRW"] = 0.5;
+  prob["TRY"] = 0.5;
+  prob["INR"] = 0.5;
+  prob["RUB"] = 0.5;
+  prob["BRL"] = 0.5;
+  prob["ZAR"] = 0.5;
+  prob["DKK"] = 0.5;
+  prob["PLN"] = 0.5;
+  prob["TWD"] = 0.5;
+  prob["THB"] = 0.5;
+  prob["MYR"] = 0.5;
 }
 
 //setting up CORS
@@ -552,7 +581,7 @@ function sleep(ms) {
 
 //get %change
 function change(currency) {
-  var mod = 0.5;
+  var mod = prob[currency.toUpperCase()];
   if (currencies[currency] > 5000) {
     mod = 0.8;
   }
@@ -575,6 +604,7 @@ function change(currency) {
   }
   value = value * direction;
   // console.log(value);
+   prob[currency.toUpperCase()] = 0.5;
   return value;
 }
 
