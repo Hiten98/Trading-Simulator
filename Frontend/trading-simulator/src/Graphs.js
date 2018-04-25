@@ -25,22 +25,30 @@ import {
   InputGroupAddon,
   Table
 } from "reactstrap";
+import history from "./history";
 
 axios.defaults.baseURL = "http://52.14.66.192:9090";
 
-class Main extends Component {
+class Graphs extends Component {
   constructor(props) {
     super(props);
-    console.log(props.match.params);
-    let jwt = props.match.params.jwt;
+    console.log(props.match);
+    let currency1 = props.match.params.currency;
+    if (
+      props.match.params.currency == null ||
+      props.match.params.currency == ""
+    ) {
+      history.push("/login");
+    }
+    let jwt1 = props.match.params.jwt;
     if (props.match.params.jwt == null || props.match.params.jwt == "") {
-      jwt = "";
+      jwt1 = "";
     }
 
     this.state = {
+      jwt: jwt1,
       collapsed: true,
-      jwt: jwt,
-      tableVals: []
+      currency: currency1
     };
   }
 
@@ -52,55 +60,11 @@ class Main extends Component {
 
   componentDidMount = () => {
     axios
-      .post("/GET-LATEST-VALUE", {
-        jwt: this.state.jwt
+      .post("/GET-GRAPH-VALUES", {
+        currency: this.state.currency
       })
       .then(response => {
         console.log(response.data);
-        let values = [];
-        for (let curr in response.data.currencies) {
-          let changes = parseFloat(response.data.changes[curr] * 100).toFixed(
-            2
-          );
-          let changeText = "";
-          if (changes > 0) {
-            changeText = <td className="text-success">{changes}%</td>;
-          } else if (changes < 0) {
-            changeText = <td className="text-danger">{changes}%</td>;
-          } else {
-            changeText = <td>--</td>;
-          }
-          let volatility = parseFloat(response.data.volatility[curr]).toFixed(
-            2
-          );
-          let volatilityText = "";
-          if (volatility > 0) {
-            volatilityText = <td className="text-success">{volatility}%</td>;
-          } else if (volatility < 0) {
-            volatilityText = <td className="text-danger">{volatility}%</td>;
-          } else {
-            volatilityText = <td>--</td>;
-          }
-          let url;
-          if (curr == "USD" || curr == "usd") {
-            url = "USD"
-          } else {
-            url = (
-              <a href={"/graphs/" + curr + "/" + this.state.jwt}>{curr}</a>
-            );
-          }
-          values.push(
-            <tr>
-              <th scope="row">{url}</th>
-              <td>{parseFloat(response.data.currencies[curr]).toFixed(2)}</td>
-              {changeText}
-              {volatilityText}
-            </tr>
-          );
-        }
-        this.setState({
-          tableVals: values
-        });
       })
       .catch(error => {
         console.log(error);
@@ -166,11 +130,11 @@ class Main extends Component {
           }}
         >
           <Col>
-            <h3>CURRENCIES</h3>
+            <h3>{this.state.currency}</h3>
             <Table bordered responsive style={{ marginTop: "2vmin" }}>
               <thead>
                 <tr>
-                  <th>Currencies</th>
+                  <th>Currency</th>
                   <th>Value</th>
                   <th>Percent Change</th>
                   <th>Volatility</th>
@@ -185,4 +149,4 @@ class Main extends Component {
   }
 }
 
-export default Main;
+export default Graphs;

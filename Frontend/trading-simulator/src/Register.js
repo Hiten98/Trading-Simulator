@@ -48,6 +48,12 @@ class Register extends Component {
     };
   }
 
+  toggleNavbar = () => {
+    this.setState({
+      collapsed: !this.state.collapsed
+    });
+  }
+
   register = event => {
     if (
       this.state.email.length > 0 &&
@@ -67,7 +73,7 @@ class Register extends Component {
         },
         () => {
           axios
-            .post("/register", {
+            .post("/REGISTER", {
               email: this.state.email,
               password: this.state.password
             })
@@ -143,20 +149,20 @@ class Register extends Component {
           <Collapse isOpen={!this.state.collapsed} navbar>
             <Nav className="ml-auto" navbar>
               <NavItem>
-                <NavLink href="/trading/">Trading</NavLink>
+                <NavLink href="/">Home</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink href="/profile/">Profile</NavLink>
+                <NavLink href="/login/">Login</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink href="/logout/">Logout</NavLink>
+                <NavLink href="/register/">Register</NavLink>
               </NavItem>
             </Nav>
           </Collapse>
         </Navbar>
         <Row style={{ margin: "2vh" }}>
           <Col style={{ display: "flex", justifyContent: "center" }}>
-            <Jumbotron style={{ maxWidth: "50vw" }}>
+            <Jumbotron style={{ maxWidth: "60vw" }}>
               <h3>REGISTER</h3>
               <Form onSubmit={this.register}>
                 <FormGroup style={{ textAlign: "left", minWidth: "50vmin" }}>

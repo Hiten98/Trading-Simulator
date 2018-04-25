@@ -62,7 +62,7 @@ class Login extends Component {
         .digest("hex");
 
       axios
-        .post("/login", {
+        .post("/LOGIN", {
           email: this.state.email,
           password: encryptedPass
         })
@@ -77,12 +77,14 @@ class Login extends Component {
                 email: "",
                 password: ""
               });
+              //TODO: FIX ALERT
               <Alert color="danger">Incorrect Email</Alert>;
             } else if (response.data.message == "INCORRECT-PASSWORD") {
               this.setState({
                 passwordFailed: { invalid: true },
                 password: ""
               });
+              //TODO: FIX ALERT
               <Alert color="danger">Incorrect Password</Alert>;
             }
           } else {
@@ -130,16 +132,16 @@ class Login extends Component {
           <Collapse isOpen={!this.state.collapsed} navbar>
             <Nav className="ml-auto" navbar>
               <NavItem>
-                <NavLink href="/trading/">Trading</NavLink>
+                <NavLink href="/">Home</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink href="/profile/">Profile</NavLink>
+                <NavLink href="/login/">Login</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink href="/logout/">Logout</NavLink>
+                <NavLink href="/register/">Register</NavLink>
               </NavItem>
             </Nav>
-          </Collapse>
+              </Collapse>
         </Navbar>
         <Row style={{ margin: "2vh" }}>
           <Col style={{ display: "flex", justifyContent: "center" }}>

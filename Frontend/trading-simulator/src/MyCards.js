@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "./App.css";
 import "./Trading.css";
 import FaArrowRight from "react-icons/lib/fa/arrow-right";
+import axios from "axios";
 import {
   Container,
   Row,
@@ -26,11 +27,16 @@ import {
   InputGroupAddon
 } from "reactstrap";
 
+axios.defaults.baseURL = "http://52.14.66.192:9090";
+
 class Main extends Component {
   constructor(props) {
     super(props);
+    console.log(props);
     this.state = {
+      jwt: props.jwt,
       currencyList: [
+        "usd",
         "eur",
         "jpy",
         "gbp",
@@ -56,11 +62,18 @@ class Main extends Component {
         "thb",
         "myr"
       ],
-      myCurrencyList: ["eur", "jpy", "gbp", "aud", "cad"],
-      currA: "eur",
-      currB: "eur",
-      valAmt: 0.0
+      currA: "usd",
+      currB: "usd",
+      valAmt: 0.0,
+      disabled: false,
+      invalid: false
     };
+
+    if (props.disabled == true) {
+      this.setState({
+        disabled: true
+      });
+    }
   }
 
   onAmountChange = event => {
@@ -76,36 +89,91 @@ class Main extends Component {
     } else {
       this.setState(
         {
-          valAmt: event.target.value,
-          valNewAmt: event.target.value * 2
+          valAmt: event.target.value
         },
         () => {
           this.props.handleCardState(this.props.myKey, this.state);
+          axios
+            .post("/CONVERT	", {
+              token: this.state.jwt,
+              currA: this.state.currA,
+              currB: this.state.currB,
+              amt: this.state.valAmt
+            })
+            .then(response => {
+              console.log(response.data);
+              if (response.data.amt == null || response.data.amt == "") {
+                this.setState({ invalid: true });
+              } else {
+                this.setState({
+                  valNewAmt: parseFloat(response.data.amt).toFixed(2)
+                });
+              }
+            })
+            .catch(error => {
+              console.log(error);
+            });
         }
       );
     }
   };
 
   handleInputA = event => {
-    console.log(event);
     this.setState(
       {
         currA: event
       },
       () => {
         this.props.handleCardState(this.props.myKey, this.state);
+        axios
+          .post("/CONVERT", {
+            token: this.state.jwt,
+            currA: this.state.currA,
+            currB: this.state.currB,
+            amt: this.state.valAmt
+          })
+          .then(response => {
+            if (response.data.amt == null || response.data.amt == "") {
+              this.setState({ invalid: true });
+            } else {
+              this.setState({
+                valNewAmt: parseFloat(response.data.amt).toFixed(2)
+              });
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          });
       }
     );
   };
 
   handleInputB = event => {
-    console.log(event);
     this.setState(
       {
         currB: event
       },
       () => {
         this.props.handleCardState(this.props.myKey, this.state);
+        axios
+          .post("/CONVERT", {
+            token: this.state.jwt,
+            currA: this.state.currA,
+            currB: this.state.currB,
+            amt: this.state.valAmt
+          })
+          .then(response => {
+            if (response.data.amt == null || response.data.amt == "") {
+              this.setState({ invalid: true });
+            } else {
+              this.setState({
+                valNewAmt: parseFloat(response.data.amt).toFixed(2)
+              });
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          });
       }
     );
   };
@@ -124,15 +192,7 @@ class Main extends Component {
     for (let c in this.state.currencyList) {
       currencies.push(
         <option value={this.state.currencyList[c]}>
-          {this.state.currencyList[c]}
-        </option>
-      );
-    }
-    let myCurrencies = [];
-    for (let c in this.state.myCurrencyList) {
-      myCurrencies.push(
-        <option value={this.state.myCurrencyList[c]}>
-          {this.state.myCurrencyList[c]}
+          {this.state.currencyList[c].toUpperCase()}
         </option>
       );
     }
@@ -141,6 +201,7 @@ class Main extends Component {
       <Row>
         <Col className="cardCol">
           <Card style={{ display: "inline-flex", padding: "2vh" }}>
+            <h5 style={{ textAlign: "left" }}>#{this.props.myKey + 1}</h5>
             <CardText>
               <Form style={{ display: "inline-flex" }}>
                 <FormGroup>
@@ -149,9 +210,10 @@ class Main extends Component {
                     name="select"
                     id="buysell"
                     value={this.state.currA}
+                    disabled={this.state.disabled}
                     onChange={e => this.handleInputA(e.target.value)}
                   >
-                    {myCurrencies}
+                    {currencies}
                   </Input>
                 </FormGroup>
                 <FaArrowRight
@@ -184,13 +246,13 @@ class Main extends Component {
                 onChange={this.onAmountChange}
               />
               <FaArrowRight
-                  size={20}
-                  style={{
-                    marginTop: "1.5vmin",
-                    marginLeft: "2vmin",
-                    marginRight: "2vmin"
-                  }}
-                />
+                size={20}
+                style={{
+                  marginTop: "1.5vmin",
+                  marginLeft: "2vmin",
+                  marginRight: "2vmin"
+                }}
+              />
               <Input
                 placeholder="Amount"
                 type="number"

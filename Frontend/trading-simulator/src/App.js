@@ -5,6 +5,8 @@ import Main from "./Main";
 import Trading from "./Trading";
 import Login from "./Login";
 import Register from "./Register";
+import Profile from "./Profile";
+import Graphs from "./Graphs"
 
 class App extends Component {
   constructor(props) {
@@ -19,11 +21,13 @@ class App extends Component {
     if (this.state.jwt == null || this.state.jwt == "") {
       return false;
     } else {
-      return true;
+
+      return false;
     }
   };
 
   requireAuth = (nextState, replace) => {
+    console.log(nextState);
     if (!this.verifyJWT()) {
       replace({
         pathname: "/login"
@@ -36,12 +40,13 @@ class App extends Component {
       <div className="App">
         <Switch>
           <Route exact path="/" component={Main} />
+          <Route path="/home/:jwt" component={Main} />
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
-          <Route path="/profile:jwt" />
+          <Route path="/profile/:jwt" component={Profile}/>
           <Route path="/trading/:jwt" component={Trading} />
-          <Route path="/graphs/:jwt" />
-          <Redirect from="*" to="/login" />
+          <Route path="/graphs/:currency/:jwt" component={Graphs}/>
+          <Redirect from="*" to="/" />
         </Switch>
       </div>
     );
