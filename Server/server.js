@@ -44,6 +44,8 @@ changes = {};
 // set up a json of base probabilities.
 prob = {};
 
+var potentialStories = ['Employment rate has fallen/risen ', 'President did something stupid/great', 'Natural disaster', 'miraculous invention', 'scientific discovery', 'immigration laws set to change', 'more people going to country X than to country Y for higher education', 'terrorist attacks' ,'infighting amongst ruling party', 'corruption charges against clergy/counsel/senate/cabinet', 'country supported company with unethical means'];
+
 function init() {
   currencies["USD"] = 1;
   currencies["EUR"] = 0.81;
@@ -358,13 +360,19 @@ app.post('/GET-GRAPH-VALUES', function (req, res) {
   var currency = req.body.currency;
   db.graph(currency, (x) => {
     // x["status"] = true
-      res.send(x);
+    y = {};
+    y["values"] = x;
+    y["status"] = true;
+    y["volatility"] = volatility[currency.toUpperCase()];
+    y["change"] = changes[currency.toUpperCase()];
+      res.send(y);
   })
 })
 
 //get user
 app.post('/GET-USER', function (req, res) {
   var token = req.body.token;
+  console.log(req.body);
   if (token) {
     jwt.verify(token, app.get('secret'), function(err, decoded) {
       if(err) {
@@ -378,8 +386,15 @@ app.post('/GET-USER', function (req, res) {
         req.decoded = decoded;
         db.getUser(decoded.email, (x) => {
           // x["status"] = true
-          x[0]["status"] = true;
-          res.send(x[0]);
+          y = {};
+          y["status"] = true;
+          x = x[0]; //["status"] = true;
+          y["currencies"] = x;
+          y["email"] = decoded.email;
+          y["volatility"] = volatility;
+          y["changes"] = changes;
+          y["values"] = currencies;
+          res.send(y);
         })
       }
     })
@@ -498,6 +513,41 @@ app.post('/VERIFY-TRADE', function (req, res) {
   }
 })
 
+// trade once currency:
+app.post('/TRADE-ONE', function (req, res) {
+  console.log(req.body);
+  var token = req.body.token;
+  console.log(req.body);
+  if (token) {
+    jwt.verify(token, app.get('secret'), function(err, decoded) {
+      if(err) {
+        res.json({
+          'status': false,
+          'message': 'token could not be verified'
+        })
+      }
+      else {
+        console.log(decoded);
+        req.decoded = decoded;
+        var currA = req.body.currA;
+        var currB = req.body.currB;
+        var amt = req.body.amt;
+        validTrade(decoded.email, currA, currB, amt, (x) => {
+          res.json({
+            'status': x
+          })
+        })
+      }
+    })
+  }
+  else {
+    res.json({
+      'status': false,
+      'message': 'token not found'
+    })
+  }
+})
+
 //trade things
 app.post('/TRADE', function (req, res) {
   console.log(req.body);
@@ -569,7 +619,7 @@ app.post('/CONVERT', function (req, res) {
   var amt2 = amt*currencies[currB.toUpperCase()]/currencies[currA.toUpperCase()];
   res.json({
     'status': true,
-    'amt': amt
+    'amt': amt2
   })
 })
 
