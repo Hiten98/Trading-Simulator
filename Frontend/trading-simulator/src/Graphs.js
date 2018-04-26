@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import ReactDOM from "react-dom";
 import "./App.css";
 import axios from "axios";
 import {
@@ -26,6 +27,12 @@ import {
   Table
 } from "reactstrap";
 import history from "./history";
+import { LineChart, Line } from "recharts";
+
+// import Chart from "react-d3-core";
+// import LineChart from "react-d3-basic";
+// var Chart = require("react-d3-core").Chart;
+// var LineChart = require("react-d3-basic").LineChart;
 
 axios.defaults.baseURL = "http://52.14.66.192:9090";
 
@@ -48,7 +55,9 @@ class Graphs extends Component {
     this.state = {
       jwt: jwt1,
       collapsed: true,
-      currency: currency1
+      currency: currency1,
+      tableVals: [],
+      chartData: {}
     };
   }
 
@@ -65,6 +74,61 @@ class Graphs extends Component {
       })
       .then(response => {
         console.log(response.data);
+        let table = this.state.tableVals;
+        let url;
+        if (this.state.currency == "USD" || this.state.currency == "usd") {
+          url = "USD";
+        } else {
+          url = (
+            <a href={"/graphs/" + this.state.currency + "/" + this.state.jwt}>
+              {this.state.currency}
+            </a>
+          );
+        }
+        let volatilityText = "";
+        if (response.data.volatility > 0) {
+          volatilityText = (
+            <td className="text-success">
+              {parseFloat(response.data.volatility).toFixed(2)}%
+            </td>
+          );
+        } else if (response.data.volatility < 0) {
+          volatilityText = (
+            <td className="text-danger">
+              {parseFloat(response.data.volatility).toFixed(2)}%
+            </td>
+          );
+        } else {
+          volatilityText = <td>--</td>;
+        }
+        let changeText = "";
+        if (response.data.change > 0) {
+          changeText = (
+            <td className="text-success">
+              {parseFloat(response.data.change).toFixed(2)}%
+            </td>
+          );
+        } else if (response.data.change < 0) {
+          changeText = (
+            <td className="text-danger">
+              {parseFloat(response.data.change).toFixed(2)}%
+            </td>
+          );
+        } else {
+          changeText = <td>--</td>;
+        }
+        table.push(
+          <tr>
+            <th scope="row">{url}</th>
+            <td>{parseFloat(response.data.value).toFixed(2)}</td>
+            {changeText}
+            {volatilityText}
+          </tr>
+        );
+        this.setState({
+          tableVals: table,
+          chartData: response.data.values
+        });
       })
       .catch(error => {
         console.log(error);
@@ -120,7 +184,6 @@ class Graphs extends Component {
             {nav}
           </Collapse>
         </Navbar>
-
         <Row
           style={{
             paddingLeft: "10vmin",
@@ -131,6 +194,9 @@ class Graphs extends Component {
         >
           <Col>
             <h3>{this.state.currency}</h3>
+            <LineChart width={400} height={400} data={this.state.chartData}>
+              <Line type="monotone" dataKey="uv" stroke="#8884d8" />
+            </LineChart>
             <Table bordered responsive style={{ marginTop: "2vmin" }}>
               <thead>
                 <tr>

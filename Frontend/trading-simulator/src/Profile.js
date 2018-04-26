@@ -38,9 +38,10 @@ class Profile extends Component {
     }
 
     this.state = {
-      "collapsed": true,
-      "jwt": jwt,
-      "tableVals": []
+      collapsed: true,
+      jwt: jwt,
+      tableVals: [],
+      email: ""
     };
   }
 
@@ -51,7 +52,7 @@ class Profile extends Component {
   };
 
   componentDidMount = () => {
-    console.log(this.state.jwt)
+    console.log(this.state.jwt);
     axios
       .post("/GET-USER", {
         token: this.state.jwt
@@ -59,40 +60,51 @@ class Profile extends Component {
       .then(response => {
         console.log(response.data);
         let values = [];
-        // for (let curr in response.data.currencies) {
-        //   let changes = parseFloat(response.data.changes[curr] * 100).toFixed(
-        //     2
-        //   );
-        //   let changeText = "";
-        //   if (changes > 0) {
-        //     changeText = <td className="text-success">{changes}%</td>;
-        //   } else if (changes < 0) {
-        //     changeText = <td className="text-danger">{changes}%</td>;
-        //   } else {
-        //     changeText = <td>--</td>;
-        //   }
-        //   let volatility = parseFloat(response.data.volatility[curr]).toFixed(
-        //     2
-        //   );
-        //   let volatilityText = "";
-        //   if (volatility > 0) {
-        //     volatilityText = <td className="text-success">{volatility}%</td>;
-        //   } else if (volatility < 0) {
-        //     volatilityText = <td className="text-danger">{volatility}%</td>;
-        //   } else {
-        //     volatilityText = <td>--</td>;
-        //   }
-        //   let url = <a href={"/graphs/" + curr}>{curr}</a>;
-        //   values.push(
-        //     <tr>
-        //       <th scope="row">{url}</th>
-        //       <td>{parseFloat(response.data.currencies[curr]).toFixed(2)}</td>
-        //       {changeText}
-        //       {volatilityText}
-        //     </tr>
-        //   );
-        // }
+        for (let curr in response.data.currencies) {
+            console.log(curr)
+          curr = curr.toUpperCase();
+          let changes = parseFloat(response.data.changes[curr] * 100).toFixed(
+            2
+          );
+          let changeText = "";
+          if (changes > 0) {
+            changeText = <td className="text-success">{changes}%</td>;
+          } else if (changes < 0) {
+            changeText = <td className="text-danger">{changes}%</td>;
+          } else {
+            changeText = <td>--</td>;
+          }
+          let volatility = parseFloat(response.data.volatility[curr]).toFixed(
+            2
+          );
+          let volatilityText = "";
+          if (volatility > 0) {
+            volatilityText = <td className="text-success">{volatility}%</td>;
+          } else if (volatility < 0) {
+            volatilityText = <td className="text-danger">{volatility}%</td>;
+          } else {
+            volatilityText = <td>--</td>;
+          }
+          let url;
+          if (curr == "USD" || curr == "usd") {
+            url = "USD"
+          } else {
+            url = (
+              <a href={"/graphs/" + curr + "/" + this.state.jwt}>{curr}</a>
+            );
+          }
+          values.push(
+            <tr>
+              <th scope="row">{url}</th>
+              <td>{parseFloat(response.data.currencies[curr.toLowerCase()]).toFixed(2)}</td>
+              <td>{parseFloat(response.data.values[curr]).toFixed(2)}</td>
+              {changeText}
+              {volatilityText}
+            </tr>
+          );
+        }
         this.setState({
+          email: response.data.email,
           tableVals: values
         });
       })
@@ -111,19 +123,19 @@ class Profile extends Component {
           <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
           <Collapse isOpen={!this.state.collapsed} navbar>
             <Nav className="ml-auto" navbar>
-          <NavItem>
-            <NavLink href={"/home/" + this.state.jwt}>Home</NavLink>
-          </NavItem>
-          <NavItem>
-            <NavLink href={"/trading/" + this.state.jwt}>Trading</NavLink>
-          </NavItem>
-          <NavItem>
-            <NavLink href={"/profile/" + this.state.jwt}>Profile</NavLink>
-          </NavItem>
-          <NavItem>
-            <NavLink href="/logout/">Logout</NavLink>
-          </NavItem>
-        </Nav>
+              <NavItem>
+                <NavLink href={"/home/" + this.state.jwt}>Home</NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink href={"/trading/" + this.state.jwt}>Trading</NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink href={"/profile/" + this.state.jwt}>Profile</NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink href="/logout/">Logout</NavLink>
+              </NavItem>
+            </Nav>
           </Collapse>
         </Navbar>
 
@@ -132,11 +144,31 @@ class Profile extends Component {
             paddingLeft: "10vmin",
             paddingRight: "10vmin",
             paddingTop: "2vmin",
-            paddingBottom: "5vmin"
+            paddingBottom: "2vmin"
           }}
         >
           <Col>
             <h3>Profile</h3>
+            <Row style={{ textAlign: "left" }}>
+              <Col>
+                <b>EMAIL: </b>
+                <em>{this.state.email}</em>
+              </Col>
+              {/* <Col>
+                <Button>Change Password</Button>
+              </Col> */}
+            </Row>
+          </Col>
+        </Row>
+
+        <Row
+          style={{
+            paddingLeft: "10vmin",
+            paddingRight: "10vmin",
+            paddingBottom: "5vmin"
+          }}
+        >
+          <Col>
             <Table bordered responsive style={{ marginTop: "2vmin" }}>
               <thead>
                 <tr>
