@@ -20,4 +20,10 @@
     // functions.getUser("darwinfvaz@gmail.com", (x) => {
     //     console.log(x);
     // });
-    functions.clear();
+    // functions.clear();
+    functions.headlines("The Blink - Far Reach News", (x) =>{
+        console.log(x);
+    });
+    // functions.makeNews("The Blink - Far Reach News", "Great stuff happens: EUR goes negative!")
+    // console.log(Date.now());
+    // console.log(new Date().toLocaleString());

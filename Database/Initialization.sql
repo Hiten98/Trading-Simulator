@@ -1,7 +1,7 @@
 USE tradingsim;
 CREATE TABLE Users (
     email VARCHAR(50) PRIMARY KEY NOT NULL UNIQUE,
-    pass VARCHAR(32) NOT NULL,
+    pass VARCHAR(100) NOT NULL,
     usd FLOAT(20,2) DEFAULT 1000.00,
 	eur FLOAT(20,2) DEFAULT 0.00,
     jpy FLOAT(20,2) DEFAULT 0.00,
@@ -28,6 +28,7 @@ CREATE TABLE Users (
     thb FLOAT(20,2) DEFAULT 0.00,
     myr FLOAT(20,2) DEFAULT 0.00
 );
+DROP TABLE Users;
 INSERT INTO Users(email, pass) VALUES("darwinfvaz@gmail.com", "something");
 INSERT INTO Users(email, pass) VALUES("hitenrathod98@gmail.com", "something");
 INSERT INTO Users(email, pass) VALUES("sinha33@purdue.edu", "something");
@@ -265,3 +266,13 @@ SELECT * FROM AUD;
 SELECT * FROM BRL;
 SELECT * FROM JPY;
 SELECT * FROM MYR;
+SELECT * FROM DKK;
+SELECT * FROM GBP;
+SELECT * FROM TWD;
+
+CREATE TABLE News (
+    time VARCHAR(30) PRIMARY KEY,
+    source VARCHAR(50) NOT NULL,
+    headline VARCHAR(200) NOT NULL
+);
+SELECT * FROM News;

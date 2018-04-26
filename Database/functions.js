@@ -11,7 +11,9 @@
 		trade,
 		latestValue,
 		reset,
-		clear
+		clear,
+		headlines,
+		makeNews
 	}
 
 	var mysql = require('mysql');
@@ -89,7 +91,7 @@
 			var percent = (value / x[0].value) * 100 - 100;
 			var diff = value - x[0].value;
 			sql = "INSERT INTO " + currency.toUpperCase() + "(number, value, diff, percent) VALUES(" + number + ", " + value + ", " + diff + "," + percent + ")";
-			use(sql, (y) => { console.log("Add Value: Add uccess"); });
+			use(sql, (y) => { console.log("Add Value: Add success"); });
 			if(number > 200) {
 				sql = "DELETE FROM " + currency.toUpperCase() + " ORDER BY number LIMIT 1";
 				use(sql, (z) => { console.log("Add Value: Delete success"); });
@@ -100,8 +102,6 @@
 	function graph(currency, callback) {
 		var sql = "SELECT value FROM " + currency.toUpperCase();
 		use(sql, (x) => {
-			for(var i = 0; i < x.length; i++)
-            	x[i] = x[i].value
 			console.log("Graph: Success");
 			callback(x);
 		});
@@ -157,11 +157,25 @@
 	function clear() {
 		var currency = ["eur", "jpy", "gbp", "aud", "cad", "chf", "cny", "sek", "mxn", "nzd", "sgd", "hkd", "nok", "krw", "try", "inr", "rub", "brl", "zar", "dkk", "pln", "twd", "thb", "myr"];
 		currency.forEach(function(key) {
-			var sql = "DELETE FROM " + key.toUpperCase();;
+			var sql = "DELETE FROM " + key.toUpperCase();
 			use(sql, (x) => {
 				var sql2 = "INSERT INTO " + key.toUpperCase() + "(number, value, diff, percent) VALUES(1, 1, 0, 0)";
 				use(sql2, (x) => {});
 			});
+		});
+	}
+
+	function headlines(source, callback) {
+		var sql = "SELECT * FROM News WHERE source = \"" + source + "\"";
+		use(sql, (x) => {
+			callback(x);
+		});
+	}
+
+	function makeNews(source, headline) {
+		var sql = "INSERT INTO News VALUES(\"" + new Date().toLocaleString() + "\", \"" + source + "\", \"" + headline + "\")";
+		use(sql, (x) => {
+			console.log("Make News: Success");
 		});
 	}
 
