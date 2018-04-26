@@ -27,7 +27,7 @@ import {
   Table
 } from "reactstrap";
 import history from "./history";
-import { LineChart, Line, CartesianGrid, YAxis } from "recharts";
+import { LineChart, Line, CartesianGrid, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 
 // import Chart from "react-d3-core";
 // import LineChart from "react-d3-basic";
@@ -59,6 +59,7 @@ class Graphs extends Component {
       tableVals: [],
       chartData: {}
     };
+    console.log(this.state)
   }
 
   toggleNavbar = () => {
@@ -86,13 +87,13 @@ class Graphs extends Component {
           );
         }
         let volatilityText = "";
-        if (response.data.volatility > 0) {
+        if (parseFloat(response.data.volatility).toFixed(2) > 0) {
           volatilityText = (
             <td className="text-success">
               {parseFloat(response.data.volatility).toFixed(2)}%
             </td>
           );
-        } else if (response.data.volatility < 0) {
+        } else if (parseFloat(response.data.volatility).toFixed(2) < 0) {
           volatilityText = (
             <td className="text-danger">
               {parseFloat(response.data.volatility).toFixed(2)}%
@@ -102,13 +103,13 @@ class Graphs extends Component {
           volatilityText = <td>--</td>;
         }
         let changeText = "";
-        if (response.data.change > 0) {
+        if (parseFloat(response.data.change).toFixed(2) > 0) {
           changeText = (
             <td className="text-success">
               {parseFloat(response.data.change).toFixed(2)}%
             </td>
           );
-        } else if (response.data.change < 0) {
+        } else if (parseFloat(response.data.change).toFixed(2) < 0) {
           changeText = (
             <td className="text-danger">
               {parseFloat(response.data.change).toFixed(2)}%
@@ -136,6 +137,8 @@ class Graphs extends Component {
   };
 
   render() {
+    console.log(this.props.match.params.jwt)
+    console.log(this.state.jwt)
     let nav;
     if (
       this.props.match.params.jwt == null ||
@@ -158,7 +161,7 @@ class Graphs extends Component {
       nav = (
         <Nav className="ml-auto" navbar>
           <NavItem>
-            <NavLink href={"/" + this.state.jwt}>Home</NavLink>
+            <NavLink href={"/home/" + this.state.jwt}>Home</NavLink>
           </NavItem>
           <NavItem>
             <NavLink href={"/trading/" + this.state.jwt}>Trading</NavLink>
@@ -192,19 +195,22 @@ class Graphs extends Component {
             paddingBottom: "5vmin"
           }}
         >
-          <Col>
+          <Col style={{maxHeight: "60vmin"}}>
             <h3>{this.state.currency}</h3>
-            <LineChart width={600} height={400} data={this.state.chartData}>
-              <Line type="monotone" dataKey="value" stroke="#8884d8" />
+            <ResponsiveContainer>
+            <LineChart  data={this.state.chartData}>
+              <Line type="monotone" dataKey="value" stroke="#8884d8" dot={false} />
               <CartesianGrid stroke="#ccc" />
-              <YAxis />
+              <Tooltip />
+              <YAxis type="number" domain={[dataMin => parseFloat(dataMin - dataMin / 50).toFixed(2), dataMax => parseFloat(dataMax + dataMax / 50).toFixed(2)]} />
             </LineChart>
+            </ResponsiveContainer>
             <Table bordered responsive style={{ marginTop: "2vmin" }}>
               <thead>
                 <tr>
                   <th>Currency</th>
                   <th>Value</th>
-                  <th>Percent Change</th>
+                  <th>Percent Change</th> 
                   <th>Volatility</th>
                 </tr>
               </thead>

@@ -127,18 +127,40 @@ class Trading extends Component {
               }
             );
           } else {
-            that.setState({ counter: this.state.counter + 1 }, () =>
-              that.verifyTransactions(states)
-            );
+            this.submitFunction1(states)
           }
         })
         .catch(error => {
           console.log(error);
         });
-    } else {
-      this.submitFunction();
-    }
+     } else {
+      this.setState({
+        counter: 0,
+        showSuccessAlert: true
+      });    }
   };
+
+  submitFunction1 = (states) => {
+    let that = this;
+    axios
+    .post("/TRADE-ONE", {
+      token: this.state.jwt,
+      currA: this.state.cardStates[this.state.counter].currA,
+      currB: this.state.cardStates[this.state.counter].currB,
+      amt: this.state.cardStates[this.state.counter].valAmt
+    })
+    .then(response => {
+      let cards = that.state.transactionCards;
+      cards.splice(that.state.counter,1);
+      that.setState({ counter: that.state.counter + 1, transactionCards: cards, numItems:that.state.numItems-1 }, () =>{
+        that.render();
+        that.verifyTransactions(states);
+      });
+    })
+    .catch(error => {
+      console.log(error);
+    });
+  }
 
   submitFunction = () => {
     console.log("SUBMITTING BEGINNING");
@@ -188,7 +210,16 @@ class Trading extends Component {
     this.setState({ transactionCards: cards });
   };
 
+  printThings=()=>{
+    let things=[];
+    for(let i in this.state.transactionCards){
+      things.push(this.state.transactionCards[i]);
+    }
+    return things;
+  }
+
   render() {
+    console.log(this.state.transactionCards);
     return (
       <div>
         <Navbar color="dark" dark expand="md">
@@ -233,7 +264,7 @@ class Trading extends Component {
           >
             Trades Successful
           </Alert>
-          {this.state.transactionCards}
+          {this.printThings()}
           <Row style={{ marginBottom: "2vh" }}>
             <Col className="cardCol">
               <Button color="danger" onClick={() => this.handleRemove()}>
