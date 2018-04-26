@@ -46,6 +46,7 @@ class App extends Component {
           <Route path="/profile/:jwt" component={Profile}/>
           <Route path="/trading/:jwt" component={Trading} />
           <Route path="/graphs/:currency/:jwt" component={Graphs}/>
+          <Route path="/graphs/:currency" component={Graphs}/>
           <Redirect from="*" to="/" />
         </Switch>
       </div>

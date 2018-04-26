@@ -27,7 +27,7 @@ import {
   Table
 } from "reactstrap";
 import history from "./history";
-import { LineChart, Line } from "recharts";
+import { LineChart, Line, CartesianGrid, YAxis } from "recharts";
 
 // import Chart from "react-d3-core";
 // import LineChart from "react-d3-basic";
@@ -194,8 +194,10 @@ class Graphs extends Component {
         >
           <Col>
             <h3>{this.state.currency}</h3>
-            <LineChart width={400} height={400} data={this.state.chartData}>
-              <Line type="monotone" dataKey="uv" stroke="#8884d8" />
+            <LineChart width={600} height={400} data={this.state.chartData}>
+              <Line type="monotone" dataKey="value" stroke="#8884d8" />
+              <CartesianGrid stroke="#ccc" />
+              <YAxis />
             </LineChart>
             <Table bordered responsive style={{ marginTop: "2vmin" }}>
               <thead>
