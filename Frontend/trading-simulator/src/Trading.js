@@ -30,7 +30,7 @@ import {
 import history from "./history";
 import MyCard from "./MyCards";
 
-axios.defaults.baseURL = "http://52.14.66.192:9090";
+axios.defaults.baseURL = "https://algotrader.herokuapp.com";
 
 class Trading extends Component {
   constructor(props) {
@@ -42,7 +42,7 @@ class Trading extends Component {
 
     this.state = {
       collapsed: true,
-      jwt: props.match.params.jwt,
+      "jwt": props.match.params.jwt,
       numItems: 1,
       cardStates: [],
       transactionCards: [],
@@ -120,47 +120,60 @@ class Trading extends Component {
               {
                 showAlert: true,
                 alertMsg: response.data.message,
-                alertNum: parseInt(this.state.counter, 10) + 1
+                alertNum: parseInt(this.state.counter, 10) + 1,
+                numItems: 1,
+                cardStates: [],
+                transactionCards: [],
+                counter: 0
               },
               () => {
                 console.log("failed2");
+                this.componentDidMount();
               }
             );
           } else {
-            this.submitFunction1(states)
+            this.submitFunction1(states);
           }
         })
         .catch(error => {
           console.log(error);
         });
-     } else {
+    } else {
       this.setState({
-        counter: 0,
-        showSuccessAlert: true
-      });    }
+        showSuccessAlert: true,
+        numItems: 1,
+        transactionCards: [],
+        counter: 0
+      }, () => {
+        this.componentDidMount();
+      });
+    }
   };
 
-  submitFunction1 = (states) => {
+  submitFunction1 = states => {
     let that = this;
     axios
-    .post("/TRADE-ONE", {
-      token: this.state.jwt,
-      currA: this.state.cardStates[this.state.counter].currA,
-      currB: this.state.cardStates[this.state.counter].currB,
-      amt: this.state.cardStates[this.state.counter].valAmt
-    })
-    .then(response => {
-      let cards = that.state.transactionCards;
-      cards.splice(that.state.counter,1);
-      that.setState({ counter: that.state.counter + 1, transactionCards: cards, numItems:that.state.numItems-1 }, () =>{
-        that.render();
-        that.verifyTransactions(states);
+      .post("/TRADE-ONE", {
+        token: this.state.jwt,
+        currA: this.state.cardStates[this.state.counter].currA,
+        currB: this.state.cardStates[this.state.counter].currB,
+        amt: this.state.cardStates[this.state.counter].valAmt
+      })
+      .then(response => {
+        let cards = that.state.transactionCards;
+        cards.splice(that.state.counter, 1);
+        that.setState(
+          { counter: that.state.counter + 1, transactionCards: cards },
+          () => {
+            that.render();
+            that.verifyTransactions(states);
+          }
+        );
+      })
+      .catch(error => {
+        console.log(error);
       });
-    })
-    .catch(error => {
-      console.log(error);
-    });
-  }
+  };
 
   submitFunction = () => {
     console.log("SUBMITTING BEGINNING");
@@ -191,7 +204,7 @@ class Trading extends Component {
   submitTransaction = () => {
     this.setState({
       showAlert: false,
-      showSuccessAlert: false
+      showSuccessAlert: false,
     });
     console.log(this.verifyTransactions(this.state.cardStates));
   };
@@ -210,20 +223,47 @@ class Trading extends Component {
     this.setState({ transactionCards: cards });
   };
 
-  printThings=()=>{
-    let things=[];
-    for(let i in this.state.transactionCards){
+  printThings = () => {
+    let things = [];
+    for (let i in this.state.transactionCards) {
       things.push(this.state.transactionCards[i]);
     }
     return things;
-  }
+  };
 
   render() {
     console.log(this.state.transactionCards);
-    return (
-      <div>
+    let nav;
+    console.log(this.props.match.params.jwt)
+    if (
+      this.props.match.params.jwt == null ||
+      this.props.match.params.jwt == ""
+    ) {
+      nav = (
         <Navbar color="dark" dark expand="md">
           <NavbarBrand href="/" className="mr-auto">
+            Algorithmic Trading Simulator
+          </NavbarBrand>
+          <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
+          <Collapse isOpen={!this.state.collapsed} navbar>
+            <Nav className="ml-auto" navbar>
+              <NavItem>
+                <NavLink href="/">Home</NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink href="/login/">Login</NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink href="/register/">Register</NavLink>
+              </NavItem>
+            </Nav>
+          </Collapse>
+        </Navbar>
+      );
+    } else {
+      nav = (
+        <Navbar color="dark" dark expand="md">
+          <NavbarBrand href={"/home/" + this.state.jwt} className="mr-auto">
             Algorithmic Trading Simulator
           </NavbarBrand>
           <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
@@ -244,6 +284,12 @@ class Trading extends Component {
             </Nav>
           </Collapse>
         </Navbar>
+      );
+    }
+
+    return (
+      <div>
+        {nav}
         <Container className="whole">
           <Row>
             <Col>

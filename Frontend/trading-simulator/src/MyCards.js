@@ -27,7 +27,7 @@ import {
   InputGroupAddon
 } from "reactstrap";
 
-axios.defaults.baseURL = "http://52.14.66.192:9090";
+axios.defaults.baseURL = "https://algotrader.herokuapp.com";
 
 class Main extends Component {
   constructor(props) {

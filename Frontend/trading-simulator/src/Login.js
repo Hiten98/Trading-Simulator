@@ -31,7 +31,7 @@ import history from "./history";
 const crypto = require("crypto");
 const secret = "abcdefg";
 
-axios.defaults.baseURL = "http://52.14.66.192:9090";
+axios.defaults.baseURL = "https://algotrader.herokuapp.com";
 
 class Login extends Component {
   constructor(props) {

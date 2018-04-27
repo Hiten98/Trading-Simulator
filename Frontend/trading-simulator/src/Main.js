@@ -26,7 +26,7 @@ import {
   Table
 } from "reactstrap";
 
-axios.defaults.baseURL = "http://52.14.66.192:9090";
+axios.defaults.baseURL = "https://algotrader.herokuapp.com";
 
 class Main extends Component {
   constructor(props) {
@@ -83,11 +83,9 @@ class Main extends Component {
           }
           let url;
           if (curr == "USD" || curr == "usd") {
-            url = "USD"
+            url = "USD";
           } else {
-            url = (
-              <a href={"/graphs/" + curr + "/" + this.state.jwt}>{curr}</a>
-            );
+            url = <a href={"/graphs/" + curr + "/" + this.state.jwt}>{curr}</a>;
           }
           values.push(
             <tr>
@@ -114,48 +112,56 @@ class Main extends Component {
       this.props.match.params.jwt == ""
     ) {
       nav = (
-        <Nav className="ml-auto" navbar>
-          <NavItem>
-            <NavLink href="/">Home</NavLink>
-          </NavItem>
-          <NavItem>
-            <NavLink href="/login/">Login</NavLink>
-          </NavItem>
-          <NavItem>
-            <NavLink href="/register/">Register</NavLink>
-          </NavItem>
-        </Nav>
-      );
-    } else {
-      nav = (
-        <Nav className="ml-auto" navbar>
-          <NavItem>
-            <NavLink href={"/" + this.state.jwt}>Home</NavLink>
-          </NavItem>
-          <NavItem>
-            <NavLink href={"/trading/" + this.state.jwt}>Trading</NavLink>
-          </NavItem>
-          <NavItem>
-            <NavLink href={"/profile/" + this.state.jwt}>Profile</NavLink>
-          </NavItem>
-          <NavItem>
-            <NavLink href="/logout/">Logout</NavLink>
-          </NavItem>
-        </Nav>
-      );
-    }
-
-    return (
-      <div>
         <Navbar color="dark" dark expand="md">
           <NavbarBrand href="/" className="mr-auto">
             Algorithmic Trading Simulator
           </NavbarBrand>
           <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
           <Collapse isOpen={!this.state.collapsed} navbar>
-            {nav}
+            <Nav className="ml-auto" navbar>
+              <NavItem>
+                <NavLink href="/">Home</NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink href="/login/">Login</NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink href="/register/">Register</NavLink>
+              </NavItem>
+            </Nav>
           </Collapse>
         </Navbar>
+      );
+    } else {
+      nav = (
+        <Navbar color="dark" dark expand="md">
+          <NavbarBrand href={"/home/" + this.state.jwt} className="mr-auto">
+            Algorithmic Trading Simulator
+          </NavbarBrand>
+          <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
+          <Collapse isOpen={!this.state.collapsed} navbar>
+            <Nav className="ml-auto" navbar>
+              <NavItem>
+                <NavLink href={"/home/" + this.state.jwt}>Home</NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink href={"/trading/" + this.state.jwt}>Trading</NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink href={"/profile/" + this.state.jwt}>Profile</NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink href="/logout/">Logout</NavLink>
+              </NavItem>
+            </Nav>
+          </Collapse>
+        </Navbar>
+      );
+    }
+
+    return (
+      <div>
+        {nav}
 
         <Row
           style={{
