@@ -36,7 +36,7 @@ class Trading extends Component {
   constructor(props) {
     super(props);
     if (props.match.params.jwt == null || props.match.params.jwt == "") {
-      history.push("/login");
+      history.push("/AlgorithmicTradingSimulator/login");
     }
     this.child = React.createRef();
 
@@ -241,20 +241,20 @@ class Trading extends Component {
     ) {
       nav = (
         <Navbar color="dark" dark expand="md">
-          <NavbarBrand href="/" className="mr-auto">
+          <NavbarBrand href="/AlgorithmicTradingSimulator/" className="mr-auto">
             Algorithmic Trading Simulator
           </NavbarBrand>
           <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
           <Collapse isOpen={!this.state.collapsed} navbar>
             <Nav className="ml-auto" navbar>
               <NavItem>
-                <NavLink href="/">Home</NavLink>
+                <NavLink href="/AlgorithmicTradingSimulator/">Home</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink href="/login/">Login</NavLink>
+                <NavLink href="/AlgorithmicTradingSimulator/AlgorithmicTradingSimulator/login/">Login</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink href="/register/">Register</NavLink>
+                <NavLink href="/AlgorithmicTradingSimulator/register/">Register</NavLink>
               </NavItem>
             </Nav>
           </Collapse>
@@ -263,23 +263,23 @@ class Trading extends Component {
     } else {
       nav = (
         <Navbar color="dark" dark expand="md">
-          <NavbarBrand href={"/home/" + this.state.jwt} className="mr-auto">
+          <NavbarBrand href={"/AlgorithmicTradingSimulator/home/" + this.state.jwt} className="mr-auto">
             Algorithmic Trading Simulator
           </NavbarBrand>
           <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
           <Collapse isOpen={!this.state.collapsed} navbar>
             <Nav className="ml-auto" navbar>
               <NavItem>
-                <NavLink href={"/home/" + this.state.jwt}>Home</NavLink>
+                <NavLink href={"/AlgorithmicTradingSimulator/home/" + this.state.jwt}>Home</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink href={"/trading/" + this.state.jwt}>Trading</NavLink>
+                <NavLink href={"/AlgorithmicTradingSimulator/trading/" + this.state.jwt}>Trading</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink href={"/profile/" + this.state.jwt}>Profile</NavLink>
+                <NavLink href={"/AlgorithmicTradingSimulator/profile/" + this.state.jwt}>Profile</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink href="/logout/">Logout</NavLink>
+                <NavLink href="/AlgorithmicTradingSimulator/logout/">Logout</NavLink>
               </NavItem>
             </Nav>
           </Collapse>
