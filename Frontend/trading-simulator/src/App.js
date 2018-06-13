@@ -30,7 +30,7 @@ class App extends Component {
     console.log(nextState);
     if (!this.verifyJWT()) {
       replace({
-        pathname: "/login"
+        pathname: "/AlgorithmicTradingSimulator/login"
       });
     }
   };
@@ -39,15 +39,15 @@ class App extends Component {
     return (
       <div className="App">
         <Switch>
-          <Route exact path="/" component={Main} />
-          <Route path="/home/:jwt" component={Main} />
-          <Route path="/login" component={Login} />
-          <Route path="/register" component={Register} />
-          <Route path="/profile/:jwt" component={Profile}/>
-          <Route path="/trading/:jwt" component={Trading} />
-          <Route path="/graphs/:currency/:jwt" component={Graphs}/>
-          <Route path="/graphs/:currency" component={Graphs}/>
-          <Redirect from="*" to="/" />
+          <Route exact path="/AlgorithmicTradingSimulator/" component={Main} />
+          <Route path="/AlgorithmicTradingSimulator/home/:jwt" component={Main} />
+          <Route path="/AlgorithmicTradingSimulator/login" component={Login} />
+          <Route path="/AlgorithmicTradingSimulator/register" component={Register} />
+          <Route path="/AlgorithmicTradingSimulator/profile/:jwt" component={Profile}/>
+          <Route path="/AlgorithmicTradingSimulator/trading/:jwt" component={Trading} />
+          <Route path="/AlgorithmicTradingSimulator/graphs/:currency/:jwt" component={Graphs}/>
+          <Route path="/AlgorithmicTradingSimulator/graphs/:currency" component={Graphs}/>
+          <Redirect from="*" to="/AlgorithmicTradingSimulator/" />
         </Switch>
       </div>
     );
