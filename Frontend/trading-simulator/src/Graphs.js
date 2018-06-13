@@ -45,7 +45,7 @@ class Graphs extends Component {
       props.match.params.currency == null ||
       props.match.params.currency == ""
     ) {
-      history.push("/login");
+      history.push("/AlgorithmicTradingSimulator/login");
     }
     let jwt1 = props.match.params.jwt;
     if (props.match.params.jwt == null || props.match.params.jwt == "") {
@@ -81,7 +81,7 @@ class Graphs extends Component {
           url = "USD";
         } else {
           url = (
-            <a href={"/graphs/" + this.state.currency + "/" + this.state.jwt}>
+            <a href={"/AlgorithmicTradingSimulator/graphs/" + this.state.currency + "/" + this.state.jwt}>
               {this.state.currency}
             </a>
           );
@@ -153,13 +153,13 @@ class Graphs extends Component {
           <Collapse isOpen={!this.state.collapsed} navbar>
             <Nav className="ml-auto" navbar>
               <NavItem>
-                <NavLink href="/">Home</NavLink>
+                <NavLink href="/AlgorithmicTradingSimulator/">Home</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink href="/login/">Login</NavLink>
+                <NavLink href="/AlgorithmicTradingSimulator/login/">Login</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink href="/register/">Register</NavLink>
+                <NavLink href="/AlgorithmicTradingSimulator/register/">Register</NavLink>
               </NavItem>
             </Nav>
           </Collapse>
@@ -168,23 +168,23 @@ class Graphs extends Component {
     } else {
       nav = (
         <Navbar color="dark" dark expand="md">
-          <NavbarBrand href={"/home/" + this.state.jwt} className="mr-auto">
+          <NavbarBrand href={"/AlgorithmicTradingSimulator/home/" + this.state.jwt} className="mr-auto">
             Algorithmic Trading Simulator
           </NavbarBrand>
           <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
           <Collapse isOpen={!this.state.collapsed} navbar>
             <Nav className="ml-auto" navbar>
               <NavItem>
-                <NavLink href={"/home/" + this.state.jwt}>Home</NavLink>
+                <NavLink href={"/AlgorithmicTradingSimulator/home/" + this.state.jwt}>Home</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink href={"/trading/" + this.state.jwt}>Trading</NavLink>
+                <NavLink href={"/AlgorithmicTradingSimulator/trading/" + this.state.jwt}>Trading</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink href={"/profile/" + this.state.jwt}>Profile</NavLink>
+                <NavLink href={"/AlgorithmicTradingSimulator/profile/" + this.state.jwt}>Profile</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink href="/logout/">Logout</NavLink>
+                <NavLink href="/AlgorithmicTradingSimulator/logout/">Logout</NavLink>
               </NavItem>
             </Nav>
           </Collapse>
