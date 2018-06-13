@@ -146,7 +146,7 @@ class Graphs extends Component {
     ) {
       nav = (
         <Navbar color="dark" dark expand="md">
-          <NavbarBrand href="/" className="mr-auto">
+          <NavbarBrand href="/AlgorithmicTradingSimulator/" className="mr-auto">
             Algorithmic Trading Simulator
           </NavbarBrand>
           <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
