@@ -84,7 +84,7 @@ class Register extends Component {
                 <Alert color="danger">{response.data.message}</Alert>;
               } else {
                 //ROUTE TO LOGIN PAGE
-                history.push("/login");
+                history.push("/AlgorithmicTradingSimulator/login");
               }
             })
             .catch(error => {
@@ -142,20 +142,20 @@ class Register extends Component {
     return (
       <div className="App">
         <Navbar color="dark" dark expand="md">
-          <NavbarBrand href="/" className="mr-auto">
+          <NavbarBrand href="/AlgorithmicTradingSimulator/" className="mr-auto">
             Algorithmic Trading Simulator
           </NavbarBrand>
           <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
           <Collapse isOpen={!this.state.collapsed} navbar>
             <Nav className="ml-auto" navbar>
               <NavItem>
-                <NavLink href="/">Home</NavLink>
+                <NavLink href="/AlgorithmicTradingSimulator/">Home</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink href="/login/">Login</NavLink>
+                <NavLink href="/AlgorithmicTradingSimulator/login/">Login</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink href="/register/">Register</NavLink>
+                <NavLink href="/AlgorithmicTradingSimulator/register/">Register</NavLink>
               </NavItem>
             </Nav>
           </Collapse>
